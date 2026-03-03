@@ -1,17 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:feed_the_future/app_constants.dart';
-import 'package:feed_the_future/app_user.dart';
-// import 'package:feed_the_future/auth_repository.dart';
-// import 'package:feed_the_future/auth_usecases.dart';
+import 'package:feed_the_future/core/constants/app_constants.dart';
+import 'package:feed_the_future/core/errors/failures.dart';
+import 'package:feed_the_future/features/auth/data/models/app_user_model.dart';
+import 'package:feed_the_future/features/auth/domain/entities/app_user.dart';
+import 'package:feed_the_future/features/auth/domain/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-// import '../../../../../core/constants/app_constants.dart';
-// import '../../../../../core/errors/failures.dart';
-// import '../../../domain/entities/app_user.dart';
-// import '../../../domain/repositories/auth_repository.dart';
-// import '../../models/app_user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth;

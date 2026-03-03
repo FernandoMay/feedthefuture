@@ -1,13 +1,9 @@
-import 'package:feed_the_future/app_router.dart';
-import 'package:feed_the_future/app_theme.dart';
-import 'package:feed_the_future/auth_provider.dart';
+import 'package:feed_the_future/core/routes/app_router.dart';
+import 'package:feed_the_future/core/theme/app_theme.dart';
+import 'package:feed_the_future/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-// import '../../../../../core/routes/app_router.dart';
-// import '../../../../../core/theme/app_theme.dart';
-// import '../../providers/auth_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});

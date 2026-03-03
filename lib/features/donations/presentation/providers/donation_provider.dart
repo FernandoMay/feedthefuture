@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:feed_the_future/donation.dart';
-import 'package:feed_the_future/donation_repository_impl.dart';
+import 'package:feed_the_future/features/donations/domain/entities/donation.dart';
+import 'package:feed_the_future/features/donations/data/repositories/donation_repository_impl.dart';
+import 'package:feed_the_future/features/donations/domain/repositories/donation_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final donationRepositoryProvider = Provider<DonationRepository>((ref) {
@@ -83,7 +84,20 @@ class DonationCreateNotifier extends StateNotifier<AsyncValue<void>> {
 
   Future<bool> create(Donation donation) async {
     state = const AsyncValue.loading();
-    final result = await _repository.createDonation(donation);
+    final result = await _repository.createDonation(
+      donorId: donation.donorId,
+      donorName: donation.donorName,
+      category: donation.category,
+      name: donation.name,
+      description: donation.description,
+      quantity: donation.quantity,
+      unit: donation.unit,
+      expirationDate: donation.expirationDate,
+      location: donation.location,
+      photoUrls: donation.photoUrls,
+      weightKg: donation.weightKg,
+      nutritionInfo: donation.nutritionInfo,
+    );
     return result.fold(
       (failure) {
         state = AsyncValue.error(failure.message, StackTrace.current);

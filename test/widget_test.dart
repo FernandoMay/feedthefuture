@@ -1,30 +1,52 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:feed_the_future/main.dart';
+import 'package:feed_the_future/features/auth/presentation/pages/splash_page.dart';
+import 'package:feed_the_future/core/theme/app_theme.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const FeedTheFutureApp());
+  group('Feed the Future App Tests', () {
+    testWidgets('App should build without errors', (WidgetTester tester) async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: FeedTheFutureApp(),
+        ),
+      );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      // Verify that the app builds successfully
+      expect(find.byType(MaterialApp), findsOneWidget);
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    testWidgets('SplashPage should build without errors', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: SplashPage(),
+          ),
+        ),
+      );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      // Verify that the splash page builds
+      expect(find.byType(SplashPage), findsOneWidget);
+    });
+
+    test('AppTheme should have light theme', () {
+      final theme = AppTheme.light;
+      
+      // Verify that the theme is not null
+      expect(theme, isNotNull);
+      expect(theme.colorScheme.primary, isNotNull);
+    });
+
+    test('AppTheme should have dark theme', () {
+      final theme = AppTheme.dark;
+      
+      // Verify that the theme is not null
+      expect(theme, isNotNull);
+      expect(theme.colorScheme.primary, isNotNull);
+    });
   });
 }

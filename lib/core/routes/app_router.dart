@@ -1,27 +1,16 @@
-import 'package:feed_the_future/auth_provider.dart';
-import 'package:feed_the_future/community_home_page.dart';
-import 'package:feed_the_future/donation_detail_page.dart';
-import 'package:feed_the_future/donation_form_page.dart';
-import 'package:feed_the_future/donations_list_page.dart';
-import 'package:feed_the_future/impact_dashboard_page.dart';
-import 'package:feed_the_future/login_page.dart';
-import 'package:feed_the_future/main_shell.dart';
-import 'package:feed_the_future/register_page.dart';
-import 'package:feed_the_future/splash_page.dart';
+import 'package:feed_the_future/features/auth/presentation/providers/auth_provider.dart';
+import 'package:feed_the_future/features/auth/presentation/pages/login_page.dart';
+import 'package:feed_the_future/features/auth/presentation/pages/register_page.dart';
+import 'package:feed_the_future/features/auth/presentation/pages/splash_page.dart';
+import 'package:feed_the_future/features/community/presentation/pages/community_home_page.dart';
+import 'package:feed_the_future/features/donations/presentation/pages/donation_detail_page.dart';
+import 'package:feed_the_future/features/donations/presentation/pages/donation_form_page.dart';
+import 'package:feed_the_future/features/donations/presentation/pages/donations_list_page.dart';
+import 'package:feed_the_future/features/impact/presentation/pages/impact_dashboard_page.dart';
+import 'package:feed_the_future/core/widgets/main_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-// import '../../../features/auth/presentation/pages/login_page.dart';
-// import '../../../features/auth/presentation/pages/register_page.dart';
-// import '../../../features/auth/presentation/pages/splash_page.dart';
-// import '../../../features/auth/presentation/providers/auth_provider.dart';
-// import '../../../features/community/presentation/pages/community_home_page.dart';
-// import '../../../features/donations/presentation/pages/donation_detail_page.dart';
-// import '../../../features/donations/presentation/pages/donation_form_page.dart';
-// import '../../../features/donations/presentation/pages/donations_list_page.dart';
-// import '../../../features/impact/presentation/pages/impact_dashboard_page.dart';
-// import '../../widgets/main_shell.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
