@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feed the Future – Tecnología para combatir el hambre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #0d3320;
+    --green-mid: #1a5c38;
+    --green-fresh: #2d8a55;
+    --green-lime: #6fd08c;
+    --green-glow: #9ef5b4;
+    --earth: #c8a96e;
+    --earth-light: #f0ddb0;
+    --cream: #faf6ee;
+    --white: #ffffff;
+    --charcoal: #1c1c1c;
+    --text-muted: #6b7c6e;
+    --accent-orange: #e85d26;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(250,246,238,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,138,85,0.12);
+    transition: all .3s ease;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: .7rem;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem; color: var(--green-deep);
+    text-decoration: none;
+  }
+  .nav-logo svg { width:32px; height:32px; }
+  .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+  .nav-links a {
+    font-size: .88rem; font-weight: 500;
+    color: var(--green-mid); text-decoration: none;
+    letter-spacing: .03em;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--green-fresh); }
+  .nav-cta {
+    background: var(--green-deep); color: var(--green-lime) !important;
+    padding: .6rem 1.4rem; border-radius: 100px;
+    font-weight: 600 !important;
+    transition: background .2s, transform .2s !important;
+  }
+  .nav-cta:hover { background: var(--green-fresh) !important; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 80% 70% at 70% 50%, rgba(111,208,140,.18) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 20% 80%, rgba(200,169,110,.12) 0%, transparent 60%);
+  }
+  .hero-bg-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image: linear-gradient(rgba(45,138,85,.06) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(45,138,85,.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .hero-content { position: relative; z-index: 1; padding-right: 3rem; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(45,138,85,.1); border: 1px solid rgba(45,138,85,.25);
+    padding: .4rem 1rem; border-radius: 100px;
+    font-size: .78rem; font-weight: 600; color: var(--green-mid);
+    letter-spacing: .06em; text-transform: uppercase;
+    margin-bottom: 1.8rem;
+  }
+  .hero-badge span { width:6px; height:6px; border-radius:50%; background:var(--green-fresh); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+  
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.8rem);
+    line-height: 1.05;
+    color: var(--green-deep);
+    margin-bottom: 1.4rem;
+  }
+  h1 em {
+    font-style: italic; color: var(--green-fresh);
+    position: relative;
+  }
+  h1 em::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--green-fresh), var(--green-lime));
+    border-radius: 2px;
+  }
+  .hero-desc {
+    font-size: 1.08rem; line-height: 1.75;
+    color: var(--text-muted); max-width: 480px;
+    margin-bottom: 2.4rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--green-deep); color: var(--green-lime);
+    padding: .9rem 2rem; border-radius: 100px;
+    font-weight: 600; font-size: .95rem;
+    text-decoration: none; letter-spacing: .02em;
+    transition: all .25s;
+    box-shadow: 0 4px 20px rgba(13,51,32,.25);
+  }
+  .btn-primary:hover { background: var(--green-fresh); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(13,51,32,.3); }
+  .btn-ghost {
+    background: transparent; color: var(--green-mid);
+    border: 1.5px solid rgba(45,138,85,.35);
+    padding: .9rem 2rem; border-radius: 100px;
+    font-weight: 500; font-size: .95rem;
+    text-decoration: none;
+    transition: all .25s;
+  }
+  .btn-ghost:hover { background: rgba(45,138,85,.08); border-color: var(--green-fresh); }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 3.5rem;
+    padding-top: 2rem; border-top: 1px solid rgba(45,138,85,.15);
+  }
+  .stat-num {
+    font-family: 'DM Serif Display', serif; font-size: 2.2rem;
+    color: var(--green-deep); line-height: 1;
+  }
+  .stat-label { font-size: .78rem; color: var(--text-muted); margin-top: .2rem; letter-spacing: .04em; }
+
+  /* Hero Visual */
+  .hero-visual { position: relative; z-index: 1; }
+  .hero-card-main {
+    background: var(--green-deep);
+    border-radius: 24px;
+    padding: 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    transform: rotate(1deg);
+    box-shadow: 0 20px 60px rgba(13,51,32,.3);
+    animation: floatMain 6s ease-in-out infinite;
+  }
+  @keyframes floatMain { 0%,100%{transform:rotate(1deg) translateY(0)} 50%{transform:rotate(1deg) translateY(-8px)} }
+  .hero-card-main::before {
+    content: '';
+    position: absolute; top:-30%; right:-20%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(111,208,140,.25), transparent);
+    border-radius: 50%;
+  }
+  .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; }
+  .card-title { font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--green-glow); font-weight:600; }
+  .card-dot { width:10px;height:10px;border-radius:50%;background:var(--green-lime);box-shadow:0 0 12px var(--green-lime); }
+  .donation-list { display:flex; flex-direction:column; gap:.9rem; }
+  .donation-item {
+    display: flex; align-items: center; gap: .9rem;
+    background: rgba(255,255,255,.07); border-radius: 12px;
+    padding: .75rem 1rem;
+    border: 1px solid rgba(255,255,255,.08);
+    transition: background .2s;
+  }
+  .donation-icon {
+    width:38px; height:38px; border-radius:10px;
+    background: rgba(111,208,140,.2);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.2rem;
+  }
+  .donation-info { flex:1; }
+  .donation-name { font-size:.85rem; font-weight:500; }
+  .donation-meta { font-size:.72rem; color:rgba(255,255,255,.5); margin-top:.15rem; }
+  .donation-badge {
+    font-size:.68rem; font-weight:700; letter-spacing:.05em;
+    padding:.25rem .6rem; border-radius:100px;
+  }
+  .badge-safe { background:rgba(111,208,140,.2); color:var(--green-lime); }
+  .badge-urgent { background:rgba(232,93,38,.2); color:#ffa07a; }
+  .badge-matched { background:rgba(200,169,110,.2); color:var(--earth-light); }
+
+  .hero-card-float {
+    position: absolute;
+    background: white;
+    border-radius: 16px;
+    padding: 1rem 1.3rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,.12);
+    border: 1px solid rgba(45,138,85,.1);
+    animation: floatCard 5s ease-in-out infinite;
+  }
+  @keyframes floatCard { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  .card-float-1 { bottom:-30px; left:-40px; animation-delay:1s; }
+  .card-float-2 { top:-20px; right:-30px; animation-delay:2.5s; }
+  .float-label { font-size:.7rem; color:var(--text-muted); letter-spacing:.05em; text-transform:uppercase; margin-bottom:.3rem; }
+  .float-value { font-family:'DM Serif Display',serif; font-size:1.5rem; color:var(--green-deep); }
+  .float-sub { font-size:.72rem; color:var(--green-fresh); font-weight:500; margin-top:.1rem; }
+
+  /* ── SECTION BASE ── */
+  section { padding: 7rem 3rem; }
+  .section-label {
+    font-size:.78rem; font-weight:700; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--green-fresh);
+    margin-bottom:1rem;
+  }
+  .section-title {
+    font-family:'DM Serif Display',serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    color: var(--green-deep); line-height: 1.15;
+    margin-bottom: 1.2rem;
+  }
+  .section-desc {
+    font-size:1.02rem; color:var(--text-muted);
+    line-height:1.75; max-width:520px;
+  }
+
+  /* ── PROBLEM ── */
+  .problem-section {
+    background: var(--green-deep);
+    position: relative; overflow: hidden;
+  }
+  .problem-section::before {
+    content:'';
+    position:absolute; top:0;left:0;right:0;bottom:0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236fd08c' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .problem-section .section-label { color: var(--green-glow); }
+  .problem-section .section-title { color: var(--cream); }
+  .problem-section .section-desc { color: rgba(250,246,238,.55); }
+  
+  .problem-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 3rem; align-items: center; position: relative; z-index:1;
+  }
+  .problem-stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;
+  }
+  .problem-stat-card {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(111,208,140,.15);
+    border-radius: 20px; padding: 1.8rem;
+    transition: background .3s, transform .3s;
+  }
+  .problem-stat-card:hover { background: rgba(255,255,255,.09); transform: translateY(-3px); }
+  .psc-number {
+    font-family:'DM Serif Display',serif;
+    font-size: 3rem; line-height:1;
+    color: var(--green-lime);
+    margin-bottom: .4rem;
+  }
+  .psc-label { font-size:.88rem; color:rgba(250,246,238,.6); line-height:1.4; }
+  .psc-icon { font-size: 1.8rem; margin-bottom: .8rem; }
+
+  /* ── HOW IT WORKS ── */
+  .how-section { background: var(--cream); }
+  .steps-container { display:flex; flex-direction:column; gap:0; margin-top:3.5rem; position:relative; }
+  .steps-container::before {
+    content:''; position:absolute; left:28px; top:56px; bottom:56px;
+    width:2px; background:linear-gradient(180deg, var(--green-fresh), var(--green-lime));
+  }
+  .step-item {
+    display:flex; gap:2rem; align-items:flex-start;
+    padding: 1.5rem 0;
+  }
+  .step-num {
+    width:56px; height:56px; border-radius:50%; flex-shrink:0;
+    background: var(--green-deep); color:var(--green-lime);
+    font-family:'DM Serif Display',serif; font-size:1.3rem;
+    display:flex;align-items:center;justify-content:center;
+    position:relative; z-index:1;
+    box-shadow:0 0 0 4px var(--cream), 0 0 0 6px rgba(45,138,85,.2);
+  }
+  .step-body { padding-top:.4rem; }
+  .step-title { font-weight:600; font-size:1.1rem; color:var(--green-deep); margin-bottom:.5rem; }
+  .step-desc { font-size:.92rem; color:var(--text-muted); line-height:1.7; }
+  .step-tag {
+    display:inline-block; margin-top:.7rem;
+    font-size:.72rem; font-weight:700; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--green-mid);
+    background:rgba(45,138,85,.1); padding:.3rem .8rem;
+    border-radius:100px;
+  }
+
+  /* ── FEATURES ── */
+  .features-section { background: white; }
+  .features-grid {
+    display:grid; grid-template-columns: repeat(3,1fr); gap:1.5rem;
+    margin-top:3.5rem;
+  }
+  .feature-card {
+    border-radius:24px; padding:2rem;
+    border:1.5px solid rgba(45,138,85,.1);
+    transition: all .3s;
+    position:relative; overflow:hidden;
+  }
+  .feature-card::before {
+    content:''; position:absolute; top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg, var(--green-fresh), var(--green-lime));
+    transform:scaleX(0); transform-origin:left;
+    transition:transform .3s;
+  }
+  .feature-card:hover::before { transform:scaleX(1); }
+  .feature-card:hover { border-color:rgba(45,138,85,.3); transform:translateY(-4px); box-shadow:0 12px 40px rgba(45,138,85,.12); }
+  .feature-icon {
+    width:52px;height:52px;border-radius:16px;
+    background:linear-gradient(135deg, rgba(45,138,85,.12), rgba(111,208,140,.08));
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.5rem; margin-bottom:1.2rem;
+  }
+  .feature-title { font-weight:600; font-size:1.05rem; color:var(--green-deep); margin-bottom:.6rem; }
+  .feature-desc { font-size:.88rem; color:var(--text-muted); line-height:1.7; }
+  .feature-card.highlight {
+    background:var(--green-deep); border-color:transparent;
+  }
+  .feature-card.highlight .feature-title { color:var(--cream); }
+  .feature-card.highlight .feature-desc { color:rgba(250,246,238,.55); }
+  .feature-card.highlight .feature-icon { background:rgba(111,208,140,.15); }
+
+  /* ── TECH STACK ── */
+  .tech-section { background:var(--cream); }
+  .tech-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; margin-top:3.5rem; }
+  .tech-layers { display:flex; flex-direction:column; gap:1rem; }
+  .tech-layer {
+    background:white; border-radius:16px; padding:1.2rem 1.5rem;
+    border:1.5px solid rgba(45,138,85,.1);
+    display:flex; align-items:center; gap:1.2rem;
+    transition:all .3s;
+  }
+  .tech-layer:hover { border-color:var(--green-fresh); transform:translateX(6px); }
+  .tech-layer-icon {
+    width:44px;height:44px;border-radius:12px;
+    background:linear-gradient(135deg,var(--green-deep),var(--green-mid));
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.2rem;flex-shrink:0;
+  }
+  .tech-layer-name { font-weight:600; font-size:.95rem; color:var(--green-deep); }
+  .tech-layer-tech { font-size:.78rem; color:var(--text-muted); margin-top:.15rem; }
+  .tech-arrow { color:var(--green-glow); font-size:1.2rem; margin-left:auto; opacity:.4; }
+
+  .arch-diagram {
+    background:var(--green-deep); border-radius:24px;
+    padding:2rem; position:relative; overflow:hidden;
+  }
+  .arch-diagram::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(111,208,140,.15), transparent);
+  }
+  .arch-title { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--green-glow); margin-bottom:1.5rem; font-weight:700; }
+  .arch-flow { display:flex; flex-direction:column; gap:.6rem; }
+  .arch-box {
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(111,208,140,.15);
+    border-radius:12px; padding:.8rem 1.2rem;
+    font-size:.82rem; color:rgba(250,246,238,.8);
+    display:flex; align-items:center; gap:.8rem;
+    transition:background .2s;
+    position:relative; z-index:1;
+  }
+  .arch-box:hover { background:rgba(255,255,255,.12); }
+  .arch-box-icon { font-size:1rem; opacity:.7; }
+  .arch-connector { text-align:center; color:var(--green-lime); font-size:.9rem; opacity:.6; padding:.1rem 0; position:relative; z-index:1; }
+
+  /* ── IMPACT ── */
+  .impact-section {
+    background: linear-gradient(135deg, #f5f0e8, #edf5ee);
+    position: relative; overflow:hidden;
+  }
+  .impact-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; margin-top:3.5rem; }
+  .impact-card {
+    background:white; border-radius:24px; padding:2rem;
+    text-align:center;
+    box-shadow:0 4px 24px rgba(45,138,85,.07);
+    border:1.5px solid rgba(45,138,85,.08);
+    transition:all .3s;
+  }
+  .impact-card:hover { transform:translateY(-4px); box-shadow:0 12px 40px rgba(45,138,85,.14); }
+  .impact-icon { font-size:2.2rem; margin-bottom:1rem; }
+  .impact-num {
+    font-family:'DM Serif Display',serif;
+    font-size:2.8rem; color:var(--green-deep); line-height:1;
+    margin-bottom:.4rem;
+  }
+  .impact-label { font-size:.85rem; color:var(--text-muted); line-height:1.4; }
+
+  /* ── BUSINESS ── */
+  .business-section { background:white; }
+  .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:3.5rem; }
+  .pricing-card {
+    border-radius:24px; padding:2.2rem;
+    border:1.5px solid rgba(45,138,85,.12);
+    position:relative; transition:all .3s;
+  }
+  .pricing-card.featured {
+    background:var(--green-deep); border-color:transparent;
+    transform:scale(1.03);
+    box-shadow:0 20px 60px rgba(13,51,32,.25);
+  }
+  .pricing-card:not(.featured):hover { border-color:var(--green-fresh); transform:translateY(-4px); }
+  .pricing-badge {
+    position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+    background:var(--green-lime); color:var(--green-deep);
+    font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    padding:.3rem 1rem; border-radius:100px;
+  }
+  .pricing-plan { font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--green-fresh); margin-bottom:.8rem; }
+  .pricing-card.featured .pricing-plan { color:var(--green-glow); }
+  .pricing-price {
+    font-family:'DM Serif Display',serif; font-size:2.5rem;
+    color:var(--green-deep); line-height:1; margin-bottom:.3rem;
+  }
+  .pricing-card.featured .pricing-price { color:var(--cream); }
+  .pricing-period { font-size:.82rem; color:var(--text-muted); margin-bottom:1.5rem; }
+  .pricing-card.featured .pricing-period { color:rgba(250,246,238,.5); }
+  .pricing-features { list-style:none; display:flex; flex-direction:column; gap:.75rem; }
+  .pricing-features li {
+    font-size:.88rem; color:var(--text-muted);
+    display:flex; gap:.7rem; align-items:flex-start;
+  }
+  .pricing-card.featured .pricing-features li { color:rgba(250,246,238,.7); }
+  .pricing-features li::before { content:'✓'; color:var(--green-fresh); font-weight:700; flex-shrink:0; }
+  .pricing-card.featured .pricing-features li::before { color:var(--green-lime); }
+  .pricing-btn {
+    display:block; text-align:center; margin-top:1.8rem;
+    padding:.8rem; border-radius:100px;
+    font-weight:600; font-size:.9rem; text-decoration:none;
+    background:rgba(45,138,85,.1); color:var(--green-mid);
+    transition:all .2s;
+  }
+  .pricing-card.featured .pricing-btn { background:var(--green-lime); color:var(--green-deep); }
+  .pricing-btn:hover { opacity:.85; transform:translateY(-1px); }
+
+  /* ── ROADMAP ── */
+  .roadmap-section { background:var(--cream); }
+  .phases-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:3.5rem; }
+  .phase-card {
+    border-radius:24px; padding:2rem;
+    background:white; border:1.5px solid rgba(45,138,85,.1);
+    position:relative; overflow:hidden;
+  }
+  .phase-tag {
+    font-size:.72rem; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; margin-bottom:1rem;
+    display:inline-block; padding:.3rem .8rem;
+    border-radius:100px;
+  }
+  .phase-1 .phase-tag { background:rgba(45,138,85,.12); color:var(--green-mid); }
+  .phase-2 .phase-tag { background:rgba(200,169,110,.2); color:#8a6e2a; }
+  .phase-3 .phase-tag { background:rgba(232,93,38,.12); color:var(--accent-orange); }
+  .phase-name { font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--green-deep); margin-bottom:.5rem; }
+  .phase-time { font-size:.8rem; color:var(--text-muted); margin-bottom:1.2rem; }
+  .phase-items { list-style:none; display:flex; flex-direction:column; gap:.6rem; }
+  .phase-items li { font-size:.88rem; color:var(--text-muted); display:flex; gap:.6rem; }
+  .phase-items li::before { content:'→'; color:var(--green-fresh); }
+
+  /* ── CTA ── */
+  .cta-section {
+    background:var(--green-deep);
+    text-align:center; padding:8rem 3rem;
+    position:relative; overflow:hidden;
+  }
+  .cta-section::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse 70% 60% at 50% 50%, rgba(111,208,140,.12), transparent);
+  }
+  .cta-section .section-label { color:var(--green-glow); }
+  .cta-section .section-title { color:var(--cream); margin-bottom:1.2rem; }
+  .cta-section .section-desc { color:rgba(250,246,238,.55); text-align:center; max-width:480px; margin:0 auto 2.5rem; }
+  .cta-actions { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; position:relative; z-index:1; }
+
+  /* ── FOOTER ── */
+  footer {
+    background:var(--charcoal); color:rgba(255,255,255,.5);
+    padding:3rem; display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:1rem;
+  }
+  .footer-logo {
+    font-family:'DM Serif Display',serif; font-size:1.1rem;
+    color:var(--green-lime);
+  }
+  .footer-tagline { font-size:.8rem; margin-top:.2rem; }
+  .footer-links { display:flex; gap:1.5rem; }
+  .footer-links a { font-size:.8rem; color:rgba(255,255,255,.35); text-decoration:none; transition:color .2s; }
+  .footer-links a:hover { color:var(--green-lime); }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity:0; transform:translateY(30px);
+    animation: fadeUp .8s forwards;
+  }
+  .fade-up-delay-1 { animation-delay:.1s; }
+  .fade-up-delay-2 { animation-delay:.2s; }
+  .fade-up-delay-3 { animation-delay:.35s; }
+  .fade-up-delay-4 { animation-delay:.5s; }
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:900px) {
+    nav { padding:1rem 1.5rem; }
+    .nav-links { display:none; }
+    .hero { grid-template-columns:1fr; padding:7rem 1.5rem 3rem; }
+    .hero-visual { display:none; }
+    section { padding:5rem 1.5rem; }
+    .problem-grid, .tech-grid { grid-template-columns:1fr; gap:2rem; }
+    .features-grid, .impact-grid, .pricing-grid, .phases-grid { grid-template-columns:1fr; }
+    .problem-stats-grid { grid-template-columns:1fr 1fr; }
+    .pricing-card.featured { transform:none; }
+    footer { flex-direction:column; text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="15" fill="#0d3320"/>
+      <path d="M8 22c2-4 5-8 8-10 3 2 6 6 8 10H8z" fill="#6fd08c"/>
+      <path d="M16 12V7" stroke="#9ef5b4" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="16" cy="6" r="1.5" fill="#9ef5b4"/>
+    </svg>
+    Feed the Future
+  </a>
+  <ul class="nav-links">
+    <li><a href="#problema">Problema</a></li>
+    <li><a href="#solucion">Solución</a></li>
+    <li><a href="#tecnologia">Tecnología</a></li>
+    <li><a href="#impacto">Impacto</a></li>
+    <li><a href="#negocio">Modelo</a></li>
+    <li><a href="#contacto" class="nav-cta">Comenzar</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-bg-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge fade-up">
+      <span></span> Plataforma activa en México
+    </div>
+    <h1 class="fade-up fade-up-delay-1">
+      Tecnología para<br>
+      <em>combatir</em><br>
+      el hambre
+    </h1>
+    <p class="hero-desc fade-up fade-up-delay-2">
+      Conectamos supermercados, restaurantes y productores con comunidades vulnerables mediante inteligencia artificial para rescatar alimentos y eliminar el desperdicio.
+    </p>
+    <div class="hero-actions fade-up fade-up-delay-3">
+      <a href="#solucion" class="btn-primary">Ver la plataforma</a>
+      <a href="#tecnologia" class="btn-ghost">Arquitectura técnica</a>
+    </div>
+    <div class="hero-stats fade-up fade-up-delay-4">
+      <div>
+        <div class="stat-num">1/3</div>
+        <div class="stat-label">de alimentos producidos<br>se desperdician</div>
+      </div>
+      <div>
+        <div class="stat-num">828M</div>
+        <div class="stat-label">personas con<br>inseguridad alimentaria</div>
+      </div>
+      <div>
+        <div class="stat-num">70%</div>
+        <div class="stat-label">reducción potencial<br>con tecnología</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual fade-up fade-up-delay-2">
+    <div class="hero-card-main">
+      <div class="card-header">
+        <span class="card-title">Donaciones en tiempo real</span>
+        <span class="card-dot"></span>
+      </div>
+      <div class="donation-list">
+        <div class="donation-item">
+          <div class="donation-icon">🥦</div>
+          <div class="donation-info">
+            <div class="donation-name">Verduras mixtas — 42 kg</div>
+            <div class="donation-meta">Walmart Tlalpan · hace 8 min</div>
+          </div>
+          <span class="donation-badge badge-safe">SEGURO</span>
+        </div>
+        <div class="donation-item">
+          <div class="donation-icon">🍞</div>
+          <div class="donation-info">
+            <div class="donation-name">Pan artesanal — 18 kg</div>
+            <div class="donation-meta">Panadería del Sur · hace 22 min</div>
+          </div>
+          <span class="donation-badge badge-urgent">URGENTE</span>
+        </div>
+        <div class="donation-item">
+          <div class="donation-icon">🍎</div>
+          <div class="donation-info">
+            <div class="donation-name">Frutas variadas — 65 kg</div>
+            <div class="donation-meta">Mercado Central · hace 35 min</div>
+          </div>
+          <span class="donation-badge badge-matched">ASIGNADO</span>
+        </div>
+        <div class="donation-item">
+          <div class="donation-icon">🥛</div>
+          <div class="donation-info">
+            <div class="donation-name">Lácteos — 30 L</div>
+            <div class="donation-meta">Soriana Coyoacán · hace 50 min</div>
+          </div>
+          <span class="donation-badge badge-safe">SEGURO</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-card-float card-float-1">
+      <div class="float-label">Hoy rescatados</div>
+      <div class="float-value">1,247 kg</div>
+      <div class="float-sub">↑ 23% vs ayer</div>
+    </div>
+    <div class="hero-card-float card-float-2">
+      <div class="float-label">Familias atendidas</div>
+      <div class="float-value">340</div>
+      <div class="float-sub">🟢 En ruta</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMA -->
+<section id="problema" class="problem-section">
+  <div class="problem-grid">
+    <div>
+      <div class="section-label">El Problema</div>
+      <h2 class="section-title">Una crisis global<br>que tiene solución</h2>
+      <p class="section-desc">
+        Mientras millones de personas no tienen acceso a alimentos básicos, toneladas de comida apta para consumo terminan en la basura cada día por falta de coordinación y tecnología.
+      </p>
+      <div style="margin-top:2rem;">
+        <p style="font-size:.9rem;color:rgba(250,246,238,.45);line-height:1.8;">
+          No existe un sistema eficiente que conecte a quienes tienen excedentes con quienes los necesitan. Los bancos de alimentos operan con procesos manuales, sin trazabilidad ni predicción de demanda. El resultado: comida apta se desperdicia y familias vulnerables no reciben apoyo nutricional adecuado.
+        </p>
+      </div>
+    </div>
+    <div class="problem-stats-grid">
+      <div class="problem-stat-card">
+        <div class="psc-icon">🌍</div>
+        <div class="psc-number">1,300M</div>
+        <div class="psc-label">toneladas de alimentos desperdiciadas al año</div>
+      </div>
+      <div class="problem-stat-card">
+        <div class="psc-icon">🇲🇽</div>
+        <div class="psc-number">34%</div>
+        <div class="psc-label">de mexicanos en inseguridad alimentaria</div>
+      </div>
+      <div class="problem-stat-card">
+        <div class="psc-icon">💸</div>
+        <div class="psc-number">$940B</div>
+        <div class="psc-label">USD en pérdidas económicas anuales por desperdicio</div>
+      </div>
+      <div class="problem-stat-card">
+        <div class="psc-icon">🏭</div>
+        <div class="psc-number">8%</div>
+        <div class="psc-label">de emisiones globales de GEI provienen del desperdicio alimentario</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUCIÓN / HOW IT WORKS -->
+<section id="solucion" class="how-section">
+  <div style="max-width:560px;">
+    <div class="section-label">La Solución</div>
+    <h2 class="section-title">Cómo funciona<br>Feed the Future</h2>
+    <p class="section-desc">Un ecosistema digital que conecta, evalúa, optimiza y mide el impacto de cada kilogramo rescatado.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:1rem;">
+    <div class="steps-container">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Registro de excedentes</div>
+          <div class="step-desc">Donantes registran alimentos disponibles en tiempo real desde su app. El sistema captura tipo, cantidad, caducidad y ubicación automáticamente.</div>
+          <span class="step-tag">Flutter App · Firestore</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Evaluación inteligente de riesgo</div>
+          <div class="step-desc">El motor de IA califica cada donación con scoring sanitario: SEGURO, CONDICIONAL o RECHAZADO, basado en historial, tiempo y tipo de alimento.</div>
+          <span class="step-tag">ML · Cloud Functions</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Matching automático</div>
+          <div class="step-desc">El algoritmo de matching conecta cada donación con la ONG o comunidad óptima según proximidad, capacidad y necesidad nutricional actual.</div>
+          <span class="step-tag">Assignment Problem · IA</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Optimización logística</div>
+          <div class="step-desc">El sistema genera rutas eficientes para voluntarios minimizando distancia, tiempo y riesgo de caducidad con algoritmos tipo VRP.</div>
+          <span class="step-tag">OR-Tools · VRP</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Trazabilidad y métricas de impacto</div>
+          <div class="step-desc">Cada entrega genera un registro inmutable con CO₂ evitado, kg rescatados, familias beneficiadas e índice nutricional en tiempo real.</div>
+          <span class="step-tag">BigQuery · ESG Dashboard</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;padding-top:1rem;">
+      <div style="background:var(--green-deep);border-radius:24px;padding:2rem;color:white;">
+        <div style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green-glow);font-weight:700;margin-bottom:1.2rem;">Dashboard de impacto — Hoy</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div style="background:rgba(255,255,255,.07);border-radius:16px;padding:1.2rem;">
+            <div style="font-size:.72rem;color:rgba(250,246,238,.45);margin-bottom:.3rem;">KG Rescatados</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--green-lime);">4,823</div>
+          </div>
+          <div style="background:rgba(255,255,255,.07);border-radius:16px;padding:1.2rem;">
+            <div style="font-size:.72rem;color:rgba(250,246,238,.45);margin-bottom:.3rem;">CO₂ Evitado</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--green-lime);">2.1 t</div>
+          </div>
+          <div style="background:rgba(255,255,255,.07);border-radius:16px;padding:1.2rem;">
+            <div style="font-size:.72rem;color:rgba(250,246,238,.45);margin-bottom:.3rem;">Familias</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--green-lime);">1,240</div>
+          </div>
+          <div style="background:rgba(255,255,255,.07);border-radius:16px;padding:1.2rem;">
+            <div style="font-size:.72rem;color:rgba(250,246,238,.45);margin-bottom:.3rem;">ONGs activas</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:2rem;color:var(--green-lime);">38</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:white;border-radius:24px;padding:1.8rem;border:1.5px solid rgba(45,138,85,.12);">
+        <div style="font-size:.8rem;font-weight:600;color:var(--green-deep);margin-bottom:1rem;">Usuarios de la plataforma</div>
+        <div style="display:flex;flex-direction:column;gap:.7rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:.85rem;color:var(--text-muted);">🏪 Supermercados y restaurantes</span>
+            <span style="font-size:.78rem;font-weight:600;color:var(--green-mid);">Donantes</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:.85rem;color:var(--text-muted);">🤝 Bancos de alimentos / ONGs</span>
+            <span style="font-size:.78rem;font-weight:600;color:var(--green-mid);">Receptores</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:.85rem;color:var(--text-muted);">🚚 Voluntarios logísticos</span>
+            <span style="font-size:.78rem;font-weight:600;color:var(--green-mid);">Transportistas</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:.85rem;color:var(--text-muted);">👨‍👩‍👧 Comunidades vulnerables</span>
+            <span style="font-size:.78rem;font-weight:600;color:var(--green-mid);">Beneficiarios</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:.85rem;color:var(--text-muted);">🏛️ Gobierno / municipios</span>
+            <span style="font-size:.78rem;font-weight:600;color:var(--green-mid);">Supervisores</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="section-label">Funcionalidades clave</div>
+  <h2 class="section-title">Todo lo que necesitas<br>en una sola plataforma</h2>
+  <div class="features-grid">
+    <div class="feature-card highlight">
+      <div class="feature-icon">🤖</div>
+      <div class="feature-title" style="color:var(--cream);">Motor de IA predictivo</div>
+      <div class="feature-desc">Predicción de demanda nutricional comunitaria con modelos LSTM y Prophet. Anticipa necesidades antes de que surjan.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <div class="feature-title">Matching inteligente</div>
+      <div class="feature-desc">Algoritmo de asignación óptima que conecta donaciones con comunidades en milisegundos considerando urgencia, distancia y capacidad.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🗺️</div>
+      <div class="feature-title">Optimización de rutas</div>
+      <div class="feature-desc">VRP con heurística Clarke-Wright. Minimiza tiempo de entrega y maximiza frescura de los alimentos rescatados.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <div class="feature-title">Scoring sanitario</div>
+      <div class="feature-desc">Evaluación automatizada de seguridad alimentaria. Cada lote recibe calificación: Seguro, Condicional o Rechazado.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Dashboard ESG en tiempo real</div>
+      <div class="feature-desc">Métricas de impacto ambiental y social actualizadas continuamente. Reportes automáticos para compliance corporativo.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <div class="feature-title">Trazabilidad completa</div>
+      <div class="feature-desc">Logs inmutables por lote, firma digital del receptor, timestamps y auditoría automática para total transparencia.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TECNOLOGÍA -->
+<section id="tecnologia" class="tech-section">
+  <div style="text-align:center;margin-bottom:0;">
+    <div class="section-label">Arquitectura Técnica</div>
+    <h2 class="section-title">Stack de producción,<br>diseñado para escalar</h2>
+  </div>
+  <div class="tech-grid">
+    <div class="tech-layers">
+      <div class="tech-layer">
+        <div class="tech-layer-icon">📱</div>
+        <div>
+          <div class="tech-layer-name">Frontend Multi-rol</div>
+          <div class="tech-layer-tech">Flutter · Clean Architecture · Provider</div>
+        </div>
+        <div class="tech-arrow">→</div>
+      </div>
+      <div class="tech-layer">
+        <div class="tech-layer-icon">⚙️</div>
+        <div>
+          <div class="tech-layer-name">API Layer</div>
+          <div class="tech-layer-tech">Firebase Cloud Functions · API Gateway · REST</div>
+        </div>
+        <div class="tech-arrow">→</div>
+      </div>
+      <div class="tech-layer">
+        <div class="tech-layer-icon">🧩</div>
+        <div>
+          <div class="tech-layer-name">Core Services</div>
+          <div class="tech-layer-tech">Matching Engine · Logistics · Food Safety</div>
+        </div>
+        <div class="tech-arrow">→</div>
+      </div>
+      <div class="tech-layer">
+        <div class="tech-layer-icon">🗄️</div>
+        <div>
+          <div class="tech-layer-name">Data Layer</div>
+          <div class="tech-layer-tech">Firestore · BigQuery · Firebase Storage</div>
+        </div>
+        <div class="tech-arrow">→</div>
+      </div>
+      <div class="tech-layer">
+        <div class="tech-layer-icon">🤖</div>
+        <div>
+          <div class="tech-layer-name">AI Layer</div>
+          <div class="tech-layer-tech">TensorFlow · Prophet · OR-Tools · Vertex AI</div>
+        </div>
+        <div class="tech-arrow">→</div>
+      </div>
+      <div class="tech-layer">
+        <div class="tech-layer-icon">📈</div>
+        <div>
+          <div class="tech-layer-name">Analytics & Impact</div>
+          <div class="tech-layer-tech">Looker Studio · BigQuery · ESG Reports</div>
+        </div>
+        <div class="tech-arrow">→</div>
+      </div>
+    </div>
+    <div class="arch-diagram">
+      <div class="arch-title">Flujo de datos — Feed the Future</div>
+      <div class="arch-flow">
+        <div class="arch-box"><span class="arch-box-icon">📱</span>Flutter Apps (Multi-rol)</div>
+        <div class="arch-connector">↓ API Request</div>
+        <div class="arch-box"><span class="arch-box-icon">⚡</span>Cloud Functions API Gateway</div>
+        <div class="arch-connector">↓ Event Trigger</div>
+        <div class="arch-box"><span class="arch-box-icon">🧠</span>Matching Engine → VRP Optimizer</div>
+        <div class="arch-connector">↓ Read/Write</div>
+        <div class="arch-box"><span class="arch-box-icon">🔥</span>Firestore Collections</div>
+        <div class="arch-connector">↓ Analytics Stream</div>
+        <div class="arch-box"><span class="arch-box-icon">📊</span>BigQuery → Impact Dashboard</div>
+        <div class="arch-connector">↓ Notifications</div>
+        <div class="arch-box"><span class="arch-box-icon">🔔</span>Firebase Cloud Messaging</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACTO -->
+<section id="impacto" class="impact-section">
+  <div style="text-align:center;">
+    <div class="section-label">Impacto Medible</div>
+    <h2 class="section-title">Números que hablan<br>por sí solos</h2>
+    <p class="section-desc" style="margin:0 auto;">Cada kilogramo rescatado se traduce en impacto social, ambiental y económico verificable y auditable.</p>
+  </div>
+  <div class="impact-grid">
+    <div class="impact-card">
+      <div class="impact-icon">🌱</div>
+      <div class="impact-num">70%</div>
+      <div class="impact-label">Reducción de desperdicio<br>alimentario en piloto</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-icon">👨‍👩‍👧</div>
+      <div class="impact-num">50K+</div>
+      <div class="impact-label">Familias beneficiadas<br>proyectadas en Fase 1</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-icon">🏭</div>
+      <div class="impact-num">850 t</div>
+      <div class="impact-label">CO₂ evitado anualmente<br>por ciudad operando</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-icon">💰</div>
+      <div class="impact-num">40%</div>
+      <div class="impact-label">Ahorro en costos de gestión<br>para donantes corporativos</div>
+    </div>
+  </div>
+  <div style="margin-top:3rem;background:white;border-radius:24px;padding:2.5rem;border:1.5px solid rgba(45,138,85,.1);max-width:800px;margin-left:auto;margin-right:auto;">
+    <div style="font-weight:600;color:var(--green-deep);margin-bottom:1.2rem;">ODS — Objetivos de Desarrollo Sostenible alineados</div>
+    <div style="display:flex;flex-wrap:wrap;gap:.8rem;">
+      <span style="background:rgba(45,138,85,.08);color:var(--green-mid);padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:500;">🎯 ODS 2 — Hambre Cero</span>
+      <span style="background:rgba(45,138,85,.08);color:var(--green-mid);padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:500;">🤝 ODS 1 — Fin de la Pobreza</span>
+      <span style="background:rgba(45,138,85,.08);color:var(--green-mid);padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:500;">🌿 ODS 12 — Producción Responsable</span>
+      <span style="background:rgba(45,138,85,.08);color:var(--green-mid);padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:500;">🌍 ODS 13 — Acción por el Clima</span>
+      <span style="background:rgba(45,138,85,.08);color:var(--green-mid);padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:500;">🔗 ODS 17 — Alianzas Estratégicas</span>
+    </div>
+  </div>
+</section>
+
+<!-- MODELO DE NEGOCIO -->
+<section id="negocio" class="business-section">
+  <div style="text-align:center;">
+    <div class="section-label">Modelo de Negocio</div>
+    <h2 class="section-title">Impacto social + viabilidad<br>económica real</h2>
+    <p class="section-desc" style="margin:0 auto 1rem;">Estrategia híbrida B2B2G que monetiza sin comprometer la misión social.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-plan">Básico — B2B</div>
+      <div class="pricing-price">$1,500</div>
+      <div class="pricing-period">MXN / mes por donante</div>
+      <ul class="pricing-features">
+        <li>Registro de donaciones</li>
+        <li>Matching automático básico</li>
+        <li>Notificaciones en tiempo real</li>
+        <li>Dashboard de impacto estándar</li>
+        <li>Reporte fiscal mensual</li>
+        <li>Soporte por chat</li>
+      </ul>
+      <a href="#contacto" class="pricing-btn">Iniciar gratis</a>
+    </div>
+    <div class="pricing-card featured">
+      <span class="pricing-badge">Más popular</span>
+      <div class="pricing-plan">Pro — B2B ESG</div>
+      <div class="pricing-price">$3,000</div>
+      <div class="pricing-period">MXN / mes por empresa</div>
+      <ul class="pricing-features">
+        <li>Todo lo del plan Básico</li>
+        <li>Optimización logística avanzada</li>
+        <li>Métricas ESG en tiempo real</li>
+        <li>Sello "Zero Food Waste Partner"</li>
+        <li>Certificación digital de impacto</li>
+        <li>Reportes auditables para gobierno</li>
+        <li>API + integración POS</li>
+      </ul>
+      <a href="#contacto" class="pricing-btn">Solicitar demo</a>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-plan">Government — B2G</div>
+      <div class="pricing-price">$50K+</div>
+      <div class="pricing-period">MXN / año por municipio</div>
+      <ul class="pricing-features">
+        <li>Dashboard regional completo</li>
+        <li>Datos agregados anonimizados</li>
+        <li>Indicadores de políticas públicas</li>
+        <li>Integración con sistemas gov.</li>
+        <li>Soporte dedicado 24/7</li>
+        <li>Personalización por región</li>
+      </ul>
+      <a href="#contacto" class="pricing-btn">Hablar con ventas</a>
+    </div>
+  </div>
+  <div style="margin-top:3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+    <div style="background:rgba(45,138,85,.06);border-radius:20px;padding:1.8rem;border:1.5px solid rgba(45,138,85,.1);">
+      <div style="font-size:1.2rem;margin-bottom:.8rem;">📦</div>
+      <div style="font-weight:600;color:var(--green-deep);margin-bottom:.5rem;">Logística como Servicio</div>
+      <div style="font-size:.85rem;color:var(--text-muted);line-height:1.6;">En CDMX: comisión del 8% por entrega logística gestionada. Red de micro-hubs y voluntarios remunerados.</div>
+    </div>
+    <div style="background:rgba(45,138,85,.06);border-radius:20px;padding:1.8rem;border:1.5px solid rgba(45,138,85,.1);">
+      <div style="font-size:1.2rem;margin-bottom:.8rem;">📈</div>
+      <div style="font-weight:600;color:var(--green-deep);margin-bottom:.5rem;">Data & Analytics</div>
+      <div style="font-size:.85rem;color:var(--text-muted);line-height:1.6;">Insights anónimos de patrones de desperdicio y demanda nutricional para investigadores y gobierno.</div>
+    </div>
+    <div style="background:rgba(45,138,85,.06);border-radius:20px;padding:1.8rem;border:1.5px solid rgba(45,138,85,.1);">
+      <div style="font-size:1.2rem;margin-bottom:.8rem;">🔮</div>
+      <div style="font-weight:600;color:var(--green-deep);margin-bottom:.5rem;">Tokenización futura</div>
+      <div style="font-size:.85rem;color:var(--text-muted);line-height:1.6;">Tokenización de impacto social verificable. Integración opcional con línea blockchain del ecosistema MIRAI.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="roadmap-section">
+  <div style="text-align:center;">
+    <div class="section-label">Roadmap</div>
+    <h2 class="section-title">Expansión estratégica<br>por fases</h2>
+  </div>
+  <div class="phases-grid">
+    <div class="phase-card phase-1">
+      <span class="phase-tag">Fase 1 · Q1-Q2 2025</span>
+      <div class="phase-name">CDMX Piloto</div>
+      <div class="phase-time">Duración: 6 meses</div>
+      <ul class="phase-items">
+        <li>3 supermercados piloto</li>
+        <li>1 ONG partner fuerte</li>
+        <li>MVP Flutter completo</li>
+        <li>Matching básico activo</li>
+        <li>Métricas de validación</li>
+      </ul>
+    </div>
+    <div class="phase-card phase-2">
+      <span class="phase-tag">Fase 2 · Q3-Q4 2025</span>
+      <div class="phase-name">México Urbano</div>
+      <div class="phase-time">Duración: 6 meses</div>
+      <ul class="phase-items">
+        <li>20+ donantes activos</li>
+        <li>Red de 10 ONGs</li>
+        <li>Optimización logística VRP</li>
+        <li>Dashboard ESG completo</li>
+        <li>Integración POS supermercados</li>
+      </ul>
+    </div>
+    <div class="phase-card phase-3">
+      <span class="phase-tag">Fase 3 · 2026+</span>
+      <div class="phase-name">Expansión LATAM</div>
+      <div class="phase-time">Duración: 18 meses</div>
+      <ul class="phase-items">
+        <li>Colombia, Chile, Argentina</li>
+        <li>Módulo gobierno B2G</li>
+        <li>Plataforma nutrición integrada</li>
+        <li>200+ clientes corporativos</li>
+        <li>Serie A fundraising</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contacto" class="cta-section">
+  <div class="section-label">¿Listo para sumarte?</div>
+  <h2 class="section-title" style="text-align:center;">Juntos podemos <em style="color:var(--green-lime);font-style:italic;">transformar</em><br>el sistema alimentario</h2>
+  <p class="section-desc">Si eres una empresa, ONG, gobierno o inversionista que quiere ser parte de la solución, hablemos.</p>
+  <div class="cta-actions">
+    <a href="mailto:hola@feedthefuture.mx" class="btn-primary" style="background:var(--green-lime);color:var(--green-deep);">Solicitar demo</a>
+    <a href="#tecnologia" class="btn-ghost" style="border-color:rgba(111,208,140,.35);color:var(--green-glow);">Ver arquitectura</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">Feed the Future</div>
+    <div class="footer-tagline">Tecnología para combatir el hambre · México 🇲🇽</div>
+  </div>
+  <div class="footer-links">
+    <a href="#problema">Problema</a>
+    <a href="#solucion">Solución</a>
+    <a href="#tecnologia">Tech</a>
+    <a href="#impacto">Impacto</a>
+    <a href="#negocio">Negocio</a>
+    <a href="mailto:hola@feedthefuture.mx">Contacto</a>
+  </div>
+  <div style="font-size:.75rem;opacity:.3;">© 2025 Feed the Future. Todos los derechos reservados.</div>
+</footer>
+
+<script>
+  // Scroll-triggered animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.style.opacity = '1';
+        el.target.style.transform = 'translateY(0)';
+        observer.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .impact-card, .pricing-card, .phase-card, .tech-layer, .problem-stat-card, .step-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+    observer.observe(el);
+  });
+
+  // Sticky nav style
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    nav.style.boxShadow = window.scrollY > 60 ? '0 4px 24px rgba(0,0,0,.08)' : 'none';
+  });
+
+  // Animate counter numbers
+  function animateCounter(el, target, suffix = '') {
+    let current = 0;
+    const increment = target / 60;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = Math.floor(current).toLocaleString() + suffix;
+    }, 16);
+  }
+</script>
+</body>
+</html>

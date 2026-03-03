@@ -1,0 +1,98 @@
+name: feed_the_future
+description: Plataforma inteligente de rescate y donación de alimentos con IA.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.16.0
+  cloud_firestore: ^4.14.0
+  firebase_storage: ^11.6.0
+  firebase_messaging: ^14.7.9
+  cloud_functions: ^4.6.0
+
+  # State Management
+  provider: ^6.1.1
+  riverpod: ^2.4.9
+  flutter_riverpod: ^2.4.9
+
+  # Navigation
+  go_router: ^12.1.3
+
+  # UI
+  flutter_animate: ^4.3.0
+  shimmer: ^3.0.0
+  fl_chart: ^0.66.1
+  google_maps_flutter: ^2.5.3
+  cached_network_image: ^3.3.0
+  image_picker: ^1.0.7
+  lottie: ^3.0.0
+
+  # Networking
+  dio: ^5.4.0
+  retrofit: ^4.1.0
+  connectivity_plus: ^5.0.2
+
+  # Local Storage
+  shared_preferences: ^2.2.2
+  flutter_secure_storage: ^9.0.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Utils
+  intl: ^0.19.0
+  uuid: ^4.3.3
+  equatable: ^2.0.5
+  dartz: ^0.10.1
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+  permission_handler: ^11.2.0
+  geolocator: ^11.0.0
+  url_launcher: ^6.2.4
+  share_plus: ^7.2.2
+  qr_flutter: ^4.1.0
+  barcode_scan2: ^4.3.3
+  open_filex: ^4.3.4
+  pdf: ^3.10.7
+  path_provider: ^2.1.2
+  flutter_local_notifications: ^16.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  build_runner: ^2.4.7
+  freezed: ^2.4.6
+  json_serializable: ^6.7.1
+  retrofit_generator: ^8.1.0
+  mockito: ^5.4.4
+  hive_generator: ^2.0.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/lottie/
+  fonts:
+    - family: DMSerifDisplay
+      fonts:
+        - asset: assets/fonts/DMSerifDisplay-Regular.ttf
+        - asset: assets/fonts/DMSerifDisplay-Italic.ttf
+          style: italic
+    - family: DMSans
+      fonts:
+        - asset: assets/fonts/DMSans-Regular.ttf
+        - asset: assets/fonts/DMSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/DMSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/DMSans-Bold.ttf
+          weight: 700
