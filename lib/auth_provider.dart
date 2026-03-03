@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:feed_the_future/auth_repository_impl.dart';
+import 'package:feed_the_future/app_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../../data/repositories/auth_repository_impl.dart';
-import '../../../domain/entities/app_user.dart';
-import '../../../domain/repositories/auth_repository.dart';
-import '../../../domain/usecases/auth_usecases.dart';
+// import '../../../data/repositories/auth_repository_impl.dart';
+// import '../../../domain/entities/app_user.dart';
+// import '../../../domain/repositories/auth_repository.dart';
+// import '../../../domain/usecases/auth_usecases.dart';
 
 // Repository provider
 final authRepositoryProvider = Provider<AuthRepository>((ref) {

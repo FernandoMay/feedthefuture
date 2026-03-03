@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../../core/constants/app_constants.dart';
+import 'package:feed_the_future/app_constants.dart';
 
 class AppUser extends Equatable {
   final String id;

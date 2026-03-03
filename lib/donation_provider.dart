@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:feed_the_future/donation.dart';
+import 'package:feed_the_future/donation_repository_impl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../data/repositories/donation_repository_impl.dart';
-import '../../../domain/entities/donation.dart';
-import '../../../domain/repositories/donation_repository.dart';
 
 final donationRepositoryProvider = Provider<DonationRepository>((ref) {
   return DonationRepositoryImpl(firestore: FirebaseFirestore.instance);
