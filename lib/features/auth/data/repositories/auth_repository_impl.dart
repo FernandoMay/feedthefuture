@@ -103,13 +103,13 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<AppFailure, AppUser>> signInWithGoogle() async {
     try {
-      final googleUser = await _googleSignIn.signIn();
+      final googleUser = await _googleSignIn.authenticate();
       if (googleUser == null) {
         return const Left(AuthFailure(message: 'Inicio cancelado'));
       }
       final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
+        accessToken: googleAuth.idToken,
         idToken: googleAuth.idToken,
       );
       final userCredential = await _auth.signInWithCredential(credential);

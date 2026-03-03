@@ -1,12 +1,11 @@
-import 'package:feed_the_future/donation.dart';
-import 'package:feed_the_future/donation_provider.dart';
+import 'package:feed_the_future/features/donations/domain/entities/donation.dart';
+import 'package:feed_the_future/features/donations/presentation/providers/donation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import 'package:feed_the_future/app_theme.dart';
-import 'package:feed_the_future/donation_provider.dart';
+import 'package:feed_the_future/core/theme/app_theme.dart';
 
 class DonationDetailPage extends ConsumerWidget {
   final String donationId;

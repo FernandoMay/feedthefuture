@@ -12,7 +12,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(
     auth: FirebaseAuth.instance,
     firestore: FirebaseFirestore.instance,
-    googleSignIn: GoogleSignIn(),
+    googleSignIn: GoogleSignIn.instance,
   );
 });
 
