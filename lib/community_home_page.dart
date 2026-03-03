@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/routes/app_router.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../donations/presentation/providers/donation_provider.dart';
-import '../../../donations/presentation/widgets/donation_card.dart';
+import '../../../../../core/routes/app_router.dart';
+import '../../../../../core/theme/app_theme.dart';
+import '../../../../donations/presentation/providers/donation_provider.dart';
+import '../../../../donations/presentation/widgets/donation_card.dart';
 
 class CommunityHomePage extends ConsumerWidget {
   const CommunityHomePage({super.key});

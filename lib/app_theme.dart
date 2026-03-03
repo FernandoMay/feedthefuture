@@ -136,14 +136,14 @@ class AppTheme {
         navigationBarTheme: NavigationBarThemeData(
           backgroundColor: Colors.white,
           indicatorColor: const Color(0x1A2D8A55),
-          iconTheme: MaterialStateProperty.resolveWith((states) {
-            if (states.contains(MaterialState.selected)) {
+          iconTheme: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
               return const IconThemeData(color: greenDeep);
             }
             return const IconThemeData(color: textMuted);
           }),
-          labelTextStyle: MaterialStateProperty.resolveWith((states) {
-            if (states.contains(MaterialState.selected)) {
+          labelTextStyle: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
               return const TextStyle(
                 fontFamily: 'DMSans',
                 fontSize: 11,

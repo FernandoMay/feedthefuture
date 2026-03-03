@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/routes/app_router.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../domain/entities/donation.dart';
-import '../providers/donation_provider.dart';
+import '../../../../../core/constants/app_constants.dart';
+import '../../../../../core/routes/app_router.dart';
+import '../../../../../core/theme/app_theme.dart';
+import '../../../../auth/presentation/providers/auth_provider.dart';
+import '../../../domain/entities/donation.dart';
+import '../../providers/donation_provider.dart';
 
 class DonationFormPage extends ConsumerStatefulWidget {
   const DonationFormPage({super.key});
@@ -160,7 +160,7 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                 children: [
                   // Category
                   DropdownButtonFormField<String>(
-                    value: _category,
+                    initialValue: _category,
                     decoration: const InputDecoration(
                       labelText: 'Categoría',
                       prefixIcon: Icon(Icons.category_outlined),
@@ -219,7 +219,7 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: DropdownButtonFormField<String>(
-                          value: _unit,
+                          initialValue: _unit,
                           decoration: const InputDecoration(labelText: 'Unidad'),
                           items: AppConstants.weightUnits
                               .map((u) =>
