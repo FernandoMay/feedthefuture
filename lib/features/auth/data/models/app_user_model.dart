@@ -46,23 +46,33 @@ class AppUserModel extends AppUser {
   }
 
   Map<String, dynamic> toFirestore() {
-    return {
+    final Map<String, dynamic> data = {
       'email': email,
       'displayName': displayName,
       'role': role,
-      if (organizationName != null) 'organizationName': organizationName,
-      if (photoUrl != null) 'photoUrl': photoUrl,
-      if (phone != null) 'phone': phone,
-      if (location != null)
-        'location': {
-          'latitude': location!.latitude,
-          'longitude': location!.longitude,
-          if (location!.address != null) 'address': location!.address,
-          if (location!.city != null) 'city': location!.city,
-        },
       'createdAt': Timestamp.fromDate(createdAt),
       'isVerified': isVerified,
       'reputationScore': reputationScore,
     };
+
+    if (organizationName != null) {
+      data['organizationName'] = organizationName;
+    }
+    if (photoUrl != null) {
+      data['photoUrl'] = photoUrl;
+    }
+    if (phone != null) {
+      data['phone'] = phone;
+    }
+    if (location != null) {
+      data['location'] = {
+        'latitude': location?.latitude,
+        'longitude': location?.longitude,
+        if (location?.address != null) 'address': location?.address,
+        if (location?.city != null) 'city': location?.city,
+      };
+    }
+
+    return data;
   }
 }
