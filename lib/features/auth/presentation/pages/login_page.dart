@@ -163,11 +163,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           setState(() => _loading = true);
                           final error = await ref
                               .read(authNotifierProvider.notifier)
-                              .signIn(
-                                  email: '',
-                                  password: ''); // TODO: Google
+                              .signInWithGoogle();
                           if (!mounted) return;
                           setState(() => _loading = false);
+                          
+                          if (error != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(error),
+                                backgroundColor: AppTheme.dangerRed,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          } else {
+                            context.go(AppRoutes.home);
+                          }
                         },
                   icon: const Text('G',
                       style: TextStyle(

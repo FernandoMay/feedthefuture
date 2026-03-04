@@ -84,6 +84,21 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     );
   }
 
+  Future<String?> signInWithGoogle() async {
+    state = const AsyncValue.loading();
+    final result = await SignInWithGoogleUseCase(_repository).call();
+    return result.fold(
+      (failure) {
+        state = const AsyncValue.data(null);
+        return failure.message;
+      },
+      (user) {
+        state = AsyncValue.data(user);
+        return null;
+      },
+    );
+  }
+
   Future<void> signOut() async {
     await SignOutUseCase(_repository).call();
     state = const AsyncValue.data(null);
