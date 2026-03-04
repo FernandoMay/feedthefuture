@@ -41,46 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'your-web-api-key',
-    appId: 'your-web-app-id',
-    messagingSenderId: 'your-sender-id',
-    projectId: 'feed-the-future-mexico',
-    authDomain: 'feed-the-future-mexico.firebaseapp.com',
-    storageBucket: 'feed-the-future-mexico.appspot.com',
+    apiKey: 'AIzaSyCE6R8LniKtU1wSu3aWPM-gsuhbLE3IcME',
+    appId: '1:320530308179:web:177653e1d5720b0f433aa6',
+    messagingSenderId: '320530308179',
+    projectId: 'feedforthefuture',
+    authDomain: 'feedforthefuture.firebaseapp.com',
+    storageBucket: 'feedforthefuture.firebasestorage.app',
+    measurementId: 'G-R3RTD6LJP9',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'your-android-api-key',
-    appId: 'your-android-app-id',
-    messagingSenderId: 'your-sender-id',
-    projectId: 'feed-the-future-mexico',
-    storageBucket: 'feed-the-future-mexico.appspot.com',
+    apiKey: 'AIzaSyAa2HmR9Phv0F-ZDRcYUhlCm2GpEpscGWs',
+    appId: '1:320530308179:android:fe39e9ce8b77776b433aa6',
+    messagingSenderId: '320530308179',
+    projectId: 'feedforthefuture',
+    storageBucket: 'feedforthefuture.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'your-ios-api-key',
-    appId: 'your-ios-app-id',
-    messagingSenderId: 'your-sender-id',
-    projectId: 'feed-the-future-mexico',
-    storageBucket: 'feed-the-future-mexico.appspot.com',
-    iosBundleId: 'com.example.feed_the_future',
+    apiKey: 'AIzaSyD8Fv8wsVTFXS1tma63fpUdkZ-rjdXt5qA',
+    appId: '1:320530308179:ios:8574dd9bcdc8d644433aa6',
+    messagingSenderId: '320530308179',
+    projectId: 'feedforthefuture',
+    storageBucket: 'feedforthefuture.firebasestorage.app',
+    iosBundleId: 'com.example.feedTheFuture',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'your-macos-api-key',
-    appId: 'your-macos-app-id',
-    messagingSenderId: 'your-sender-id',
-    projectId: 'feed-the-future-mexico',
-    storageBucket: 'feed-the-future-mexico.appspot.com',
-    iosBundleId: 'com.example.feed_the_future',
+    apiKey: 'AIzaSyD8Fv8wsVTFXS1tma63fpUdkZ-rjdXt5qA',
+    appId: '1:320530308179:ios:8574dd9bcdc8d644433aa6',
+    messagingSenderId: '320530308179',
+    projectId: 'feedforthefuture',
+    storageBucket: 'feedforthefuture.firebasestorage.app',
+    iosBundleId: 'com.example.feedTheFuture',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'your-windows-api-key',
-    appId: 'your-windows-app-id',
-    messagingSenderId: 'your-sender-id',
-    projectId: 'feed-the-future-mexico',
-    authDomain: 'feed-the-future-mexico.firebaseapp.com',
-    storageBucket: 'feed-the-future-mexico.appspot.com',
+    apiKey: 'AIzaSyCE6R8LniKtU1wSu3aWPM-gsuhbLE3IcME',
+    appId: '1:320530308179:web:37411801c33198d4433aa6',
+    messagingSenderId: '320530308179',
+    projectId: 'feedforthefuture',
+    authDomain: 'feedforthefuture.firebaseapp.com',
+    storageBucket: 'feedforthefuture.firebasestorage.app',
+    measurementId: 'G-MP0RYRJ1CX',
   );
 }

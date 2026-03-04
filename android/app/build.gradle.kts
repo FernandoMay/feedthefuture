@@ -1,5 +1,8 @@
 plugins {
     id("com.android.application")
+    // START: FlutterFire Configuration
+    id("com.google.gms.google-services")
+    // END: FlutterFire Configuration
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
@@ -50,8 +53,8 @@ dependencies {
 
 configurations.all {
     resolutionStrategy {
-        force("androidx.core:core:1.9.0")
-        force("androidx.core:core-ktx:1.9.0")
+        force("androidx.core:core:1.13.1")
+        force("androidx.core:core-ktx:1.13.1")
         force("androidx.versionedparcelable:versionedparcelable:1.1.1")
         force("androidx.lifecycle:lifecycle-runtime:2.6.2")
         force("androidx.lifecycle:lifecycle-viewmodel:2.6.2")
