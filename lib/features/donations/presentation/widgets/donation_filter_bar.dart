@@ -47,7 +47,7 @@ class DonationFilterBar extends ConsumerWidget {
           // Status filter
           Expanded(
             child: DropdownButtonFormField<String>(
-              value: ref.watch(statusFilterProvider) ?? 'Todas',
+              initialValue: ref.watch(statusFilterProvider) ?? 'Todas',
               decoration: const InputDecoration(
                 labelText: 'Estado',
                 labelStyle: TextStyle(color: AppTheme.textMuted),

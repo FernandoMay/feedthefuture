@@ -27,24 +27,24 @@ class ImpactDashboardPage extends ConsumerWidget {
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('DASHBOARD ESG',
+                  Text('DASHBOARD ESG',
                       style: TextStyle(
                           fontSize: 10,
                           letterSpacing: 1.2,
                           color: AppTheme.greenGlow,
                           fontFamily: 'DMSans',
                           fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 8),
-                  const Text('Tu impacto\nacumulado',
+                  SizedBox(height: 8),
+                  Text('Tu impacto\nacumulado',
                       style: TextStyle(
                           fontFamily: 'DMSerifDisplay',
                           fontSize: 28,
                           color: AppTheme.cream,
                           height: 1.1)),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Row(children: [
                     _HeroStat('4,823 kg', 'Rescatados'),
                     _HeroStat('2.1 t', 'CO₂ evitado'),

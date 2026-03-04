@@ -17,7 +17,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -46,4 +46,18 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("androidx.core:core:1.9.0")
+        force("androidx.core:core-ktx:1.9.0")
+        force("androidx.versionedparcelable:versionedparcelable:1.1.1")
+        force("androidx.lifecycle:lifecycle-runtime:2.6.2")
+        force("androidx.lifecycle:lifecycle-viewmodel:2.6.2")
+        force("androidx.lifecycle:lifecycle-livedata:2.6.2")
+        force("androidx.arch.core:core-runtime:2.2.0")
+        force("androidx.collection:collection:1.2.0")
+        force("androidx.annotation:annotation:1.6.0")
+    }
 }

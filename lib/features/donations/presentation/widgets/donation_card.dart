@@ -65,7 +65,7 @@ class DonationCard extends ConsumerWidget {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.schedule_outlined,
                             size: 16,
                             color: AppTheme.textMuted,
@@ -99,7 +99,7 @@ class DonationCard extends ConsumerWidget {
               // Quantity and location
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.inventory_2_outlined,
                     size: 20,
                     color: AppTheme.greenFresh,

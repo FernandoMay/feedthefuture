@@ -11,26 +11,21 @@ abstract class AppFailure extends Equatable {
 }
 
 class AuthFailure extends AppFailure {
-  const AuthFailure({required String message, String? code})
-      : super(message: message, code: code);
+  const AuthFailure({required super.message, super.code});
 }
 
 class FirestoreFailure extends AppFailure {
-  const FirestoreFailure({required String message, String? code})
-      : super(message: message, code: code);
+  const FirestoreFailure({required super.message, super.code});
 }
 
 class ServerFailure extends AppFailure {
-  const ServerFailure({required String message, String? code})
-      : super(message: message, code: code);
+  const ServerFailure({required super.message, super.code});
 }
 
 class NetworkFailure extends AppFailure {
-  const NetworkFailure({required String message, String? code})
-      : super(message: message, code: code);
+  const NetworkFailure({required super.message, super.code});
 }
 
 class ValidationFailure extends AppFailure {
-  const ValidationFailure({required String message, String? code})
-      : super(message: message, code: code);
+  const ValidationFailure({required super.message, super.code});
 }

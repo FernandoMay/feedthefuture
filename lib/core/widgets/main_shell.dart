@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:feed_the_future/core/theme/app_theme.dart';
 
 class MainShell extends ConsumerWidget {
   final Widget child;

@@ -65,7 +65,7 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
         address: _addressCtrl.text.trim(),
         city: 'CDMX',
       ),
-      photoUrls: [],
+      photoUrls: const [],
       assignedNgoId: null,
       assignedNgoName: null,
       assignedVolunteerId: null,

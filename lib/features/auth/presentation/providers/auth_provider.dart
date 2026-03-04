@@ -47,7 +47,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
         .call(email: email, password: password);
     return result.fold(
       (failure) {
-        state = AsyncValue.data(null);
+        state = const AsyncValue.data(null);
         return failure.message;
       },
       (user) {
@@ -74,7 +74,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<AppUser?>> {
     );
     return result.fold(
       (failure) {
-        state = AsyncValue.data(null);
+        state = const AsyncValue.data(null);
         return failure.message;
       },
       (user) {

@@ -104,10 +104,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<AppFailure, AppUser>> signInWithGoogle() async {
     try {
       final googleUser = await _googleSignIn.authenticate();
-      if (googleUser == null) {
-        return const Left(AuthFailure(message: 'Inicio cancelado'));
-      }
-      final googleAuth = await googleUser.authentication;
+      final googleAuth = googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.idToken,
         idToken: googleAuth.idToken,
@@ -148,7 +145,7 @@ class AuthRepositoryImpl implements AuthRepository {
       await Future.wait([_auth.signOut(), _googleSignIn.signOut()]);
       return const Right(null);
     } catch (e) {
-      return Left(AuthFailure(message: 'Error al cerrar sesión'));
+      return const Left(AuthFailure(message: 'Error al cerrar sesión'));
     }
   }
 
@@ -174,7 +171,7 @@ class AuthRepositoryImpl implements AuthRepository {
       if (!doc.exists) return const Right(null);
       return Right(AppUserModel.fromFirestore(doc));
     } catch (e) {
-      return Left(FirestoreFailure(message: 'Error al obtener usuario'));
+      return const Left(FirestoreFailure(message: 'Error al obtener usuario'));
     }
   }
 
@@ -213,7 +210,7 @@ class AuthRepositoryImpl implements AuthRepository {
           .get();
       return Right(AppUserModel.fromFirestore(doc));
     } catch (e) {
-      return Left(FirestoreFailure(message: 'Error al actualizar perfil'));
+      return const Left(FirestoreFailure(message: 'Error al actualizar perfil'));
     }
   }
 
