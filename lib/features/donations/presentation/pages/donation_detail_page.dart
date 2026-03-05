@@ -1,5 +1,7 @@
 import 'package:feed_the_future/features/donations/domain/entities/donation.dart';
 import 'package:feed_the_future/features/donations/presentation/providers/donation_provider.dart';
+import 'package:feed_the_future/features/ratings/presentation/widgets/rating_widget.dart';
+import 'package:feed_the_future/features/ratings/presentation/pages/rating_dialog_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -88,6 +90,8 @@ class _DonationDetailView extends ConsumerWidget {
                 _LocationCard(donation: donation),
                 const SizedBox(height: 20),
                 _ImpactCard(donation: donation),
+                const SizedBox(height: 20),
+                _RatingSection(donation: donation),
                 const SizedBox(height: 40),
               ]),
             ),
@@ -364,26 +368,239 @@ class _BottomActions extends ConsumerWidget {
         boxShadow: [BoxShadow(
             color: Color(0x0D000000), blurRadius: 12, offset: Offset(0, -4))],
       ),
-      child: Row(children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.share_outlined),
-            label: const Text('Compartir'),
-          ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Rating section for completed donations
+          if (donation.status == 'completed') ...[
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppTheme.greenDeep.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppTheme.greenDeep.withOpacity(0.3)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.star, color: AppTheme.greenDeep),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '¿Cómo fue tu experiencia?',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          'Califica esta donación y ayuda a la comunidad',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      showRatingDialog(
+                        context: context,
+                        donationId: donation.id,
+                        donorName: donation.donorName,
+                        donationTitle: donation.name,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.greenDeep,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Calificar'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+          
+          // Original action buttons
+          Row(children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.share_outlined),
+                label: const Text('Compartir'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              flex: 2,
+              child: ElevatedButton.icon(
+                onPressed: donation.status == 'available' ? () {} : null,
+                icon: const Icon(Icons.handshake_outlined),
+                label: Text(
+                  donation.status == 'available' ? 'Reclamar donación' : 'Ya asignada',
+                ),
+              ),
+            ),
+          ]),
+        ],
+      ),
+    );
+  }
+}
+
+class _RatingSection extends StatelessWidget {
+  final Donation donation;
+  
+  const _RatingSection({required this.donation});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: Get actual ratings from provider
+    final averageRating = 4.5;
+    final totalRatings = 12;
+    
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppTheme.greenDeep, AppTheme.greenMid],
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          flex: 2,
-          child: ElevatedButton.icon(
-            onPressed: donation.status == 'available' ? () {} : null,
-            icon: const Icon(Icons.handshake_outlined),
-            label: Text(
-              donation.status == 'available' ? 'Reclamar donación' : 'Ya asignada',
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Calificaciones',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
-        ),
-      ]),
+          const SizedBox(height: 16),
+          
+          Row(
+            children: [
+              RatingWidget(
+                initialRating: averageRating.round(),
+                size: 24,
+                interactive: false,
+                showRating: false,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                averageRating.toStringAsFixed(1),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '($totalRatings calificaciones)',
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Sample reviews
+          ...List.generate(3, (index) => _buildSampleReview(index)),
+          
+          const SizedBox(height: 12),
+          
+          Center(
+            child: TextButton(
+              onPressed: () {
+                // TODO: Navigate to all reviews
+              },
+              child: const Text(
+                'Ver todas las calificaciones',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSampleReview(int index) {
+    final reviews = [
+      {'name': 'María García', 'rating': 5, 'comment': 'Excelente donación, muy fresca y bien organizada.'},
+      {'name': 'Juan Pérez', 'rating': 4, 'comment': 'Muy buena experiencia, el donador fue muy amable.'},
+      {'name': 'Ana López', 'rating': 5, 'comment': 'Perfecto, justo lo que necesitaba. ¡Gracias!'},
+    ];
+    
+    final review = reviews[index];
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: Colors.white.withOpacity(0.3),
+                child: const Icon(
+                  Icons.person,
+                  size: 16,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                review['name'] as String,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              ),
+              const Spacer(),
+              RatingWidget(
+                initialRating: review['rating'] as int,
+                size: 16,
+                interactive: false,
+                showRating: false,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            review['comment'] as String,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
