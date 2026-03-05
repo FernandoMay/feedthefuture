@@ -106,11 +106,120 @@ class DonationsListPage extends ConsumerWidget {
 class _SummaryBanner extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final donations = ref.watch(availableDonationsProvider).value ?? [];
-    final totalKg = donations.fold<double>(
-        0, (sum, d) => sum + (d.weightKg ?? d.quantity));
-    final urgent = donations.where((d) => d.isUrgent).length;
+    final donationsAsync = ref.watch(availableDonationsProvider);
 
+    return donationsAsync.when(
+      loading: () => _buildLoadingBanner(),
+      error: (error, stack) {
+        // Si el error es de índice en construcción, mostrar mensaje amigable
+        if (error.toString().contains('index is currently building')) {
+          return _buildIndexBuildingBanner();
+        }
+        return _buildErrorBanner(error.toString());
+      },
+      data: (donations) {
+        final totalKg = donations.fold<double>(
+            0, (sum, d) => sum + (d.weightKg ?? d.quantity));
+        final urgent = donations.where((d) => d.isUrgent).length;
+
+        return _buildDataBanner(donations.length, totalKg, urgent);
+      },
+    );
+  }
+
+  Widget _buildLoadingBanner() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppTheme.greenDeep, AppTheme.greenMid],
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const Row(
+        children: [
+          _SummaryItem(
+            value: '...',
+            label: 'Disponibles',
+            icon: '📦',
+          ),
+          _Divider(),
+          _SummaryItem(
+            value: '...',
+            label: 'Total',
+            icon: '⚖️',
+          ),
+          _Divider(),
+          _SummaryItem(
+            value: '...',
+            label: 'Urgentes',
+            icon: '🔥',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIndexBuildingBanner() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Colors.orange, Colors.deepOrange],
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const Row(
+        children: [
+          Icon(Icons.hourglass_empty, color: Colors.white, size: 20),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Configurando base de datos...',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorBanner(String error) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppTheme.dangerRed, Colors.redAccent],
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const Row(
+        children: [
+          Icon(Icons.error_outline, color: Colors.white, size: 20),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Error cargando datos',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDataBanner(int count, double totalKg, int urgent) {
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
@@ -123,7 +232,7 @@ class _SummaryBanner extends ConsumerWidget {
       child: Row(
         children: [
           _SummaryItem(
-            value: donations.length.toString(),
+            value: count.toString(),
             label: 'Disponibles',
             icon: '📦',
           ),
@@ -137,8 +246,7 @@ class _SummaryBanner extends ConsumerWidget {
           _SummaryItem(
             value: urgent.toString(),
             label: 'Urgentes',
-            icon: '⚡',
-            urgent: urgent > 0,
+            icon: '🔥',
           ),
         ],
       ),
