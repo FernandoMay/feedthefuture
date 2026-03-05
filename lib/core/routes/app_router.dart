@@ -8,6 +8,8 @@ import 'package:feed_the_future/features/donations/presentation/pages/donation_f
 import 'package:feed_the_future/features/donations/presentation/pages/donations_list_page.dart';
 import 'package:feed_the_future/features/impact/presentation/pages/impact_dashboard_page.dart';
 import 'package:feed_the_future/features/profile/presentation/pages/profile_page.dart';
+import 'package:feed_the_future/features/notifications/presentation/pages/notifications_page.dart';
+import 'package:feed_the_future/features/settings/presentation/pages/settings_page.dart';
 import 'package:feed_the_future/core/widgets/main_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,6 +73,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: '/profile',
             builder: (_, __) => const ProfilePage(),
           ),
+          GoRoute(
+            path: '/notifications',
+            builder: (_, __) => const NotificationsPage(),
+          ),
+          GoRoute(
+            path: '/settings',
+            builder: (_, __) => const SettingsPage(),
+          ),
         ],
       ),
     ],
@@ -105,4 +115,6 @@ class AppRoutes {
   static const impact = '/impact';
   static const community = '/community';
   static const profile = '/profile';
+  static const notifications = '/notifications';
+  static const settings = '/settings';
 }
