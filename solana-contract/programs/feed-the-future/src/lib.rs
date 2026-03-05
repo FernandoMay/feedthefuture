@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Mint, Token};
+use anchor_spl::token::{Mint, Token};
 
 declare_id!("F1T3F11111111111111111111111111111111111111");
 
@@ -639,6 +639,7 @@ pub struct CompleteDelivery<'info> {
 }
 
 #[derive(Accounts)]
+#[instruction(target_user: Pubkey)]
 pub struct UpdateReputation<'info> {
     #[account(
         mut,
