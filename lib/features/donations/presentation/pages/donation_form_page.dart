@@ -9,6 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
+import 'dart:async';
 
 class DonationFormPage extends ConsumerStatefulWidget {
   const DonationFormPage({super.key});
@@ -31,11 +35,19 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
   int _currentStep = 0;
   bool _localeInitialized = false;
 
+  // Map and location variables
+  GoogleMapController? _mapController;
+  LatLng _currentLocation = const LatLng(AppConstants.defaultLatitude, AppConstants.defaultLongitude);
+  Set<Marker> _markers = {};
+  bool _locationLoading = false;
+
   @override
   void initState() {
     super.initState();
     // Inicializar locale para formateo de fechas
     _initializeLocale();
+    // Obtener ubicación actual
+    _getCurrentLocation();
   }
 
   Future<void> _initializeLocale() async {
@@ -44,6 +56,194 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
       setState(() {
         _localeInitialized = true;
       });
+    }
+  }
+
+  Future<void> _getCurrentLocation() async {
+    setState(() => _locationLoading = true);
+    
+    try {
+      // Verificar permisos de ubicación
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Solicitar que activen los servicios de ubicación
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Por favor activa los servicios de ubicación'),
+              backgroundColor: AppTheme.dangerRed,
+            ),
+          );
+        }
+        setState(() => _locationLoading = false);
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Permiso de ubicación denegado'),
+                backgroundColor: AppTheme.dangerRed,
+              ),
+            );
+          }
+          setState(() => _locationLoading = false);
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Permiso de ubicación denegado permanentemente. Ve a configuración para habilitarlo.'),
+              backgroundColor: AppTheme.dangerRed,
+            ),
+          );
+        }
+        setState(() => _locationLoading = false);
+        return;
+      }
+
+      // Obtener posición actual
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      if (mounted) {
+        setState(() {
+          _currentLocation = LatLng(position.latitude, position.longitude);
+          _markers = {
+            Marker(
+              markerId: const MarkerId('current_location'),
+              position: _currentLocation,
+              infoWindow: const InfoWindow(title: 'Tu ubicación'),
+              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+            ),
+          };
+          _locationLoading = false;
+        });
+
+        // Mover el mapa a la ubicación actual
+        if (_mapController != null) {
+          _mapController!.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: _currentLocation,
+                zoom: 15.0,
+              ),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error obteniendo ubicación: ${e.toString()}'),
+            backgroundColor: AppTheme.dangerRed,
+          ),
+        );
+      }
+      setState(() => _locationLoading = false);
+    }
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
+    // Mover el mapa a la ubicación actual cuando se crea
+    if (_currentLocation.latitude != AppConstants.defaultLatitude) {
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: _currentLocation,
+            zoom: 15.0,
+          ),
+        ),
+      );
+    }
+  }
+
+  void _onMapTap(LatLng location) async {
+    setState(() {
+      _currentLocation = location;
+      _markers = {
+        Marker(
+          markerId: const MarkerId('selected_location'),
+          position: location,
+          infoWindow: const InfoWindow(title: 'Ubicación de recolección'),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        ),
+      };
+    });
+
+    // Obtener dirección desde coordenadas (geocodificación inversa)
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        location.latitude, 
+        location.longitude,
+      );
+      
+      if (placemarks.isNotEmpty && mounted) {
+        Placemark place = placemarks[0];
+        List<String> addressParts = [];
+        
+        // Construir dirección con más detalles disponibles
+        if (place.thoroughfare?.isNotEmpty == true) {
+          addressParts.add(place.thoroughfare!);
+        }
+        if (place.subThoroughfare?.isNotEmpty == true) {
+          addressParts.add(place.subThoroughfare!);
+        }
+        if (place.subLocality?.isNotEmpty == true) {
+          addressParts.add(place.subLocality!);
+        }
+        if (place.locality?.isNotEmpty == true) {
+          addressParts.add(place.locality!);
+        }
+        if (place.administrativeArea?.isNotEmpty == true) {
+          addressParts.add(place.administrativeArea!);
+        }
+        if (place.postalCode?.isNotEmpty == true) {
+          addressParts.add('CP ${place.postalCode!}');
+        }
+        if (place.country?.isNotEmpty == true) {
+          addressParts.add(place.country!);
+        }
+        
+        // Si la dirección es muy corta o solo contiene país, agregar coordenadas
+        if (addressParts.length <= 2) {
+          addressParts.add('(Lat: ${location.latitude.toStringAsFixed(6)}, Lng: ${location.longitude.toStringAsFixed(6)})');
+        }
+        
+        String address = addressParts.join(', ');
+        
+        // Actualizar campo de dirección
+        _addressCtrl.text = address.isNotEmpty ? address : 'Ubicación seleccionada en mapa';
+        
+        // Mostrar snackbar de confirmación
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Dirección: ${address.length > 60 ? address.substring(0, 60) + '...' : address}'),
+            backgroundColor: AppTheme.greenFresh,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        _addressCtrl.text = 'Ubicación seleccionada en mapa (Lat: ${location.latitude.toStringAsFixed(6)}, Lng: ${location.longitude.toStringAsFixed(6)})';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Usando coordenadas: ${e.toString()}'),
+            backgroundColor: AppTheme.dangerRed,
+          ),
+        );
+      }
     }
   }
 
@@ -61,7 +261,18 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
     setState(() => _loading = true);
   
     final user = ref.read(currentUserProvider);
-    if (user == null) return;
+    if (user == null) {
+      if (mounted) {
+        setState(() => _loading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error: Usuario no autenticado'),
+            backgroundColor: AppTheme.dangerRed,
+          ),
+        );
+      }
+      return;
+    }
 
     final donation = Donation(
       id: '',
@@ -78,9 +289,11 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
       status: AppConstants.statusPending,
       riskScore: AppConstants.riskSafe,
       location: DonationLocation(
-        latitude: AppConstants.defaultLatitude,
-        longitude: AppConstants.defaultLongitude,
-        address: _addressCtrl.text.trim(),
+        latitude: _currentLocation.latitude,
+        longitude: _currentLocation.longitude,
+        address: _addressCtrl.text.trim().isNotEmpty 
+            ? _addressCtrl.text.trim() 
+            : 'Ubicación seleccionada en mapa',
         city: 'CDMX',
       ),
       photoUrls: const [],
@@ -91,28 +304,60 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
       nutritionInfo: null,
     );
 
-    final ok = await ref.read(donationCreateProvider.notifier).create(donation);
-
-    if (!mounted) return;
-    setState(() => _loading = false);
-
-    if (ok) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('✅ Donación registrada exitosamente'),
-          backgroundColor: AppTheme.greenFresh,
-          behavior: SnackBarBehavior.floating,
-        ),
+    try {
+      // Agregar timeout de 10 segundos
+      final ok = await ref.read(donationCreateProvider.notifier).create(donation).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw TimeoutException('Tiempo de espera agotado', const Duration(seconds: 10));
+        },
       );
-      context.go(AppRoutes.home);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error al registrar. Intenta de nuevo.'),
-          backgroundColor: AppTheme.dangerRed,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+
+      if (!mounted) return;
+      setState(() => _loading = false);
+
+      if (ok) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Donación registrada exitosamente'),
+            backgroundColor: AppTheme.greenFresh,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        context.go(AppRoutes.home);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error al registrar. Intenta de nuevo.'),
+            backgroundColor: AppTheme.dangerRed,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _loading = false);
+        String errorMessage = 'Error al registrar donación';
+        
+        if (e is TimeoutException) {
+          errorMessage = 'Tiempo de espera agotado. Verifica tu conexión.';
+        } else if (e.toString().contains('NOT_FOUND')) {
+          errorMessage = 'Error de conexión. Verifica tu internet.';
+        }
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: AppTheme.dangerRed,
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(
+              label: 'Reintentar',
+              textColor: Colors.white,
+              onPressed: () => _submit(),
+            ),
+          ),
+        );
+      }
     }
   }
 
@@ -159,14 +404,26 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                 children: [
                   ElevatedButton(
                     onPressed: _loading ? null : details.onStepContinue,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _loading && _currentStep == 2 
+                          ? AppTheme.greenLime.withOpacity(0.7)
+                          : null,
+                    ),
                     child: _loading && _currentStep == 2
-                        ? const SizedBox(
-                            height: 18,
-                            width: 18,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppTheme.greenLime,
-                            ),
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              SizedBox(
+                                height: 18,
+                                width: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppTheme.greenLime,
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Text('Registrando...'),
+                            ],
                           )
                         : Text(
                             _currentStep == 2 ? 'Registrar donación' : 'Siguiente',
@@ -176,7 +433,7 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                   if (_currentStep > 0) ...[
                     const SizedBox(height: 12),
                     OutlinedButton(
-                      onPressed: details.onStepCancel,
+                      onPressed: _loading ? null : details.onStepCancel,
                       child: const Text('Anterior'),
                     ),
                   ],
@@ -299,7 +556,7 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                   ),
                   const SizedBox(height: 16),
                   Container(
-                    height: 140,
+                    height: 200,
                     decoration: BoxDecoration(
                       color: const Color(0x0D2D8A55),
                       borderRadius: BorderRadius.circular(16),
@@ -307,21 +564,50 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                         BorderSide(color: Color(0x1A2D8A55), width: 1.5),
                       ),
                     ),
-                    child: const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Stack(
                         children: [
-                          Icon(Icons.map_outlined,
-                              size: 36, color: AppTheme.greenFresh),
-                          SizedBox(height: 8),
-                          Text('Mapa interactivo',
-                              style: AppTextStyles.bodyMedium),
-                          Text('(Google Maps integrado en producción)',
-                              style: AppTextStyles.caption),
-                        ],
-                      ),
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: _currentLocation,
+              zoom: 15.0,
+            ),
+            markers: _markers,
+            onTap: _onMapTap,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+            zoomControlsEnabled: true,
+            mapToolbarEnabled: false,
+          ),
+          if (_locationLoading)
+            Container(
+              color: Colors.white.withOpacity(0.8),
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      color: AppTheme.greenFresh,
                     ),
-                  ),
+                    SizedBox(height: 8),
+                    Text('Obteniendo ubicación...'),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    ),
+  ),
+  const SizedBox(height: 8),
+  Text(
+    'Toca el mapa para seleccionar la ubicación de recolección',
+    style: AppTextStyles.caption.copyWith(
+      color: AppTheme.textMuted,
+    ),
+  ),
                 ],
               ),
             ),
