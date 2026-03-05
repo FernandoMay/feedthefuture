@@ -1,7 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
-use mpl_token_metadata::instructions::CreateMetadataAccountV3;
-use mpl_token_metadata::types::DataV2;
+use anchor_spl::token::{self, Mint, Token};
 
 declare_id!("F1T3F11111111111111111111111111111111111111");
 
@@ -37,12 +35,12 @@ pub mod feed_the_future {
         user.updated_at = clock.unix_timestamp;
         user.bump = ctx.bumps.user;
 
-        emit UserCreated {
+        emit!(UserCreated {
             user: user.key(),
             authority: ctx.accounts.authority.key(),
             role,
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -69,10 +67,10 @@ pub mod feed_the_future {
 
         user.updated_at = clock.unix_timestamp;
 
-        emit UserProfileUpdated {
+        emit!(UserProfileUpdated {
             user: user.key(),
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -88,11 +86,11 @@ pub mod feed_the_future {
         user.is_verified = true;
         user.updated_at = clock.unix_timestamp;
 
-        emit UserVerified {
+        emit!(UserVerified {
             user: user.key(),
             verified_by: ctx.accounts.authority.key(),
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -125,13 +123,13 @@ pub mod feed_the_future {
         donor_account.total_donations += 1;
         donor_account.updated_at = clock.unix_timestamp;
 
-        emit DonationCreated {
+        emit!(DonationCreated {
             donation: donation.key(),
             donor: ctx.accounts.donor.key(),
             category: donation_data.category.clone(),
             quantity: donation_data.quantity,
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -153,11 +151,11 @@ pub mod feed_the_future {
         donation.matched_ngo = Some(ngo_pda);
         donation.updated_at = clock.unix_timestamp;
 
-        emit DonationMatched {
+        emit!(DonationMatched {
             donation: donation.key(),
             ngo: ngo_pda,
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -196,12 +194,12 @@ pub mod feed_the_future {
         volunteer_account.total_pickups += 1;
         volunteer_account.updated_at = clock.unix_timestamp;
 
-        emit PickupScheduled {
+        emit!(PickupScheduled {
             donation: donation.key(),
             volunteer: ctx.accounts.volunteer.key(),
             scheduled_time: pickup_time,
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -229,12 +227,12 @@ pub mod feed_the_future {
         pickup_request.completed_at = Some(clock.unix_timestamp);
         pickup_request.notes = notes;
 
-        emit PickupCompleted {
+        emit!(PickupCompleted {
             donation: donation.key(),
             volunteer: ctx.accounts.volunteer.key(),
             actual_quantity,
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -272,12 +270,12 @@ pub mod feed_the_future {
         volunteer_account.total_deliveries += 1;
         volunteer_account.updated_at = clock.unix_timestamp;
 
-        emit DeliveryScheduled {
+        emit!(DeliveryScheduled {
             donation: donation.key(),
             volunteer: ctx.accounts.volunteer.key(),
             scheduled_time: delivery_time,
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -314,12 +312,12 @@ pub mod feed_the_future {
         let volunteer_account = &mut ctx.accounts.volunteer_account;
         volunteer_account.reputation_score = volunteer_account.reputation_score.saturating_add(3);
 
-        emit DeliveryCompleted {
+        emit!(DeliveryCompleted {
             donation: donation.key(),
             volunteer: ctx.accounts.volunteer.key(),
             received_quantity,
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -342,14 +340,14 @@ pub mod feed_the_future {
         user_account.reputation_score = new_score as u16;
         user_account.updated_at = clock.unix_timestamp;
 
-        emit ReputationUpdated {
+        emit!(ReputationUpdated {
             user: target_user,
             updated_by: ctx.accounts.authority.key(),
             new_score: user_account.reputation_score,
             change: reputation_change,
             reason,
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -362,49 +360,16 @@ pub mod feed_the_future {
         token_uri: String,
     ) -> Result<()> {
         let user = &ctx.accounts.user;
+        let clock = Clock::get()?;
         
-        // Create metadata for the token
-        let create_metadata_ix = CreateMetadataAccountV3 {
-            metadata: ctx.accounts.metadata_account.key(),
-            mint: ctx.accounts.mint.key(),
-            mint_authority: Some(ctx.accounts.authority.key()),
-            update_authority: Some(ctx.accounts.authority.key()),
-            payer: ctx.accounts.authority.key(),
-            system_program: ctx.accounts.system_program.to_account_info(),
-            rent: ctx.accounts.rent.to_account_info(),
-        };
-
-        let data_v2 = DataV2 {
-            name: token_name,
-            symbol: token_symbol,
-            uri: token_uri,
-            seller_fee_basis_points: 0,
-            creators: None,
-            collection: None,
-            uses: None,
-        };
-
-        let seeds = &[
-            b"metadata",
-            ctx.accounts.token_metadata_program.key().as_ref(),
-            ctx.accounts.mint.key().as_ref(),
-            &[ctx.bumps.metadata_account],
-        ];
-        let signer_seeds = &[&seeds[..]];
-
-        create_metadata_ix.invoke_signed(
-            ctx.accounts
-                .to_account_infos()
-                .into_iter()
-                .collect(),
-            signer_seeds,
-        )?;
-
-        emit RewardTokenCreated {
+        // For now, just emit the event - metadata creation can be done client-side
+        // or in a separate transaction to avoid complexity
+        
+        emit!(RewardTokenCreated {
             mint: ctx.accounts.mint.key(),
             user: user.authority,
-            timestamp: Clock::get()?.unix_timestamp,
-        };
+            timestamp: clock.unix_timestamp,
+        });
 
         Ok(())
     }
@@ -425,10 +390,10 @@ pub mod feed_the_future {
         global_config.updated_at = clock.unix_timestamp;
         global_config.bump = ctx.bumps.global_config;
 
-        emit ConfigInitialized {
+        emit!(ConfigInitialized {
             authority: ctx.accounts.authority.key(),
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -444,10 +409,10 @@ pub mod feed_the_future {
         global_config.config = new_config;
         global_config.updated_at = clock.unix_timestamp;
 
-        emit ConfigUpdated {
+        emit!(ConfigUpdated {
             authority: ctx.accounts.authority.key(),
             timestamp: clock.unix_timestamp,
-        };
+        });
 
         Ok(())
     }
@@ -711,21 +676,11 @@ pub struct CreateRewardToken<'info> {
     )]
     pub mint: Account<'info, Mint>,
     
-    #[account(
-        init,
-        payer = authority,
-        space = 8 + 32 + 32 + 32 + 4 + token_name.len() + 4 + token_symbol.len() + 4 + token_uri.len() + 2 + 1 + 4 + 4 + 4,
-        seeds = [b"metadata", token_metadata_program.key().as_ref(), mint.key().as_ref()],
-        bump
-    )]
-    pub metadata_account: Account<'info, MetadataAccount>,
-    
     #[account(mut)]
     pub authority: Signer<'info>,
     
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
-    pub token_metadata_program: Program<'info, anchor_spl::token_metadata::TokenMetadata>,
     pub rent: Sysvar<'info, Rent>,
 }
 
@@ -1110,16 +1065,6 @@ pub enum CustomError {
 }
 
 // ==================== UTILITIES ====================
-
-#[account]
-pub struct MetadataAccount {
-    pub key: Pubkey,
-    pub update_authority: Pubkey,
-    pub mint: Pubkey,
-    pub data: DataV2,
-    pub primary_sale_happened: bool,
-    pub is_mutable: bool,
-}
 
 impl Default for GlobalConfig {
     fn default() -> Self {
