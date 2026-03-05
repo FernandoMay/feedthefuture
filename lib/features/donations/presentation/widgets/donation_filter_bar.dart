@@ -21,19 +21,27 @@ class DonationFilterBar extends ConsumerWidget {
         children: [
           // Category filter
           Expanded(
+            flex: 2,
             child: DropdownButtonFormField<String>(
               initialValue: ref.watch(categoryFilterProvider) ?? 'Todas',
               decoration: const InputDecoration(
                 labelText: 'Categoría',
-                labelStyle: TextStyle(color: AppTheme.textMuted),
+                labelStyle: TextStyle(fontSize: 12, color: AppTheme.textMuted),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                isDense: true,
               ),
-              icon: const Icon(Icons.category_outlined),
+              icon: const Icon(Icons.category_outlined, size: 20),
+              isExpanded: true,
+              style: const TextStyle(fontSize: 12),
               items: ['Todas', ...AppConstants.foodCategories]
                   .map((category) => DropdownMenuItem(
                         value: category,
-                        child: Text(category),
+                        child: Text(
+                          category,
+                          style: const TextStyle(fontSize: 12),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ))
                   .toList(),
               onChanged: (value) {
@@ -46,15 +54,19 @@ class DonationFilterBar extends ConsumerWidget {
           
           // Status filter
           Expanded(
+            flex: 2,
             child: DropdownButtonFormField<String>(
               initialValue: ref.watch(statusFilterProvider) ?? 'Todas',
               decoration: const InputDecoration(
                 labelText: 'Estado',
-                labelStyle: TextStyle(color: AppTheme.textMuted),
+                labelStyle: TextStyle(fontSize: 12, color: AppTheme.textMuted),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                isDense: true,
               ),
-              icon: const Icon(Icons.filter_list_outlined),
+              icon: const Icon(Icons.filter_list_outlined, size: 20),
+              isExpanded: true,
+              style: const TextStyle(fontSize: 12),
               items: [
                 'Todas',
                 AppConstants.statusAvailable,
@@ -64,7 +76,11 @@ class DonationFilterBar extends ConsumerWidget {
               ]
                   .map((status) => DropdownMenuItem(
                         value: status,
-                        child: Text(_getStatusDisplayName(status)),
+                        child: Text(
+                          _getStatusDisplayName(status),
+                          style: const TextStyle(fontSize: 12),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ))
                   .toList(),
               onChanged: (value) {

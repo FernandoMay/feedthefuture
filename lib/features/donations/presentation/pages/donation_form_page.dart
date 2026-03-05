@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class DonationFormPage extends ConsumerStatefulWidget {
   const DonationFormPage({super.key});
@@ -28,6 +29,23 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
   DateTime _expiration = DateTime.now().add(const Duration(days: 2));
   bool _loading = false;
   int _currentStep = 0;
+  bool _localeInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicializar locale para formateo de fechas
+    _initializeLocale();
+  }
+
+  Future<void> _initializeLocale() async {
+    await initializeDateFormatting('es');
+    if (mounted) {
+      setState(() {
+        _localeInitialized = true;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -100,6 +118,15 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Esperar a que el locale esté inicializado
+    if (!_localeInitialized) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nueva donación'),
@@ -127,7 +154,8 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
           controlsBuilder: (context, details) {
             return Padding(
               padding: const EdgeInsets.only(top: 20),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ElevatedButton(
                     onPressed: _loading ? null : details.onStepContinue,
@@ -146,7 +174,7 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                           ),
                   ),
                   if (_currentStep > 0) ...[
-                    const SizedBox(width: 12),
+                    const SizedBox(height: 12),
                     OutlinedButton(
                       onPressed: details.onStepCancel,
                       child: const Text('Anterior'),
@@ -203,35 +231,31 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
               state: _currentStep > 1 ? StepState.complete : StepState.indexed,
               content: Column(
                 children: [
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        flex: 2,
-                        child: TextFormField(
-                          controller: _qtyCtrl,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Cantidad',
-                            prefixIcon: Icon(Icons.scale_outlined),
-                          ),
-                          validator: (v) {
-                            if (v == null || v.isEmpty) return 'Requerido';
-                            if (double.tryParse(v) == null) return 'Número inválido';
-                            return null;
-                          },
+                      TextFormField(
+                        controller: _qtyCtrl,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Cantidad',
+                          prefixIcon: Icon(Icons.scale_outlined),
                         ),
+                        validator: (v) {
+                          if (v == null || v.isEmpty) return 'Requerido';
+                          if (double.tryParse(v) == null) return 'Número inválido';
+                          return null;
+                        },
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: DropdownButtonFormField<String>(
-                          initialValue: _unit,
-                          decoration: const InputDecoration(labelText: 'Unidad'),
-                          items: AppConstants.weightUnits
-                              .map((u) =>
-                                  DropdownMenuItem(value: u, child: Text(u)))
-                              .toList(),
-                          onChanged: (v) => setState(() => _unit = v!),
-                        ),
+                      const SizedBox(height: 12),
+                      DropdownButtonFormField<String>(
+                        initialValue: _unit,
+                        decoration: const InputDecoration(labelText: 'Unidad'),
+                        items: AppConstants.weightUnits
+                            .map((u) =>
+                                DropdownMenuItem(value: u, child: Text(u)))
+                            .toList(),
+                        onChanged: (v) => setState(() => _unit = v!),
                       ),
                     ],
                   ),
