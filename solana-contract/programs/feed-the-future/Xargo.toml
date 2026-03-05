@@ -1,0 +1,7 @@
+[build]
+target = "bpfel-unknown-unknown"
+
+[target.bpfel-unknown-unknown]
+rustflags = [
+  "-C", "link-arg=-T/linker.ld",
+]
