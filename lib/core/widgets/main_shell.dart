@@ -16,6 +16,8 @@ class MainShell extends ConsumerWidget {
       selectedIndex = 1;
     } else if (location.startsWith('/community')) {
       selectedIndex = 2;
+    } else if (location.startsWith('/profile')) {
+      selectedIndex = 3;
     } else if (location.startsWith('/donations/new')) {
       selectedIndex = 0;
     }
@@ -47,6 +49,9 @@ class MainShell extends ConsumerWidget {
                 case 2:
                   context.go('/community');
                   break;
+                case 3:
+                  context.go('/profile');
+                  break;
               }
             },
             destinations: const [
@@ -64,6 +69,11 @@ class MainShell extends ConsumerWidget {
                 icon: Icon(Icons.people_outline_rounded),
                 selectedIcon: Icon(Icons.people_rounded),
                 label: 'Comunidad',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.person_outline_rounded),
+                selectedIcon: Icon(Icons.person_rounded),
+                label: 'Perfil',
               ),
             ],
           ),

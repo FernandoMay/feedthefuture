@@ -7,6 +7,7 @@ import 'package:feed_the_future/features/donations/presentation/pages/donation_d
 import 'package:feed_the_future/features/donations/presentation/pages/donation_form_page.dart';
 import 'package:feed_the_future/features/donations/presentation/pages/donations_list_page.dart';
 import 'package:feed_the_future/features/impact/presentation/pages/impact_dashboard_page.dart';
+import 'package:feed_the_future/features/profile/presentation/pages/profile_page.dart';
 import 'package:feed_the_future/core/widgets/main_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -66,6 +67,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: '/community',
             builder: (_, __) => const CommunityHomePage(),
           ),
+          GoRoute(
+            path: '/profile',
+            builder: (_, __) => const ProfilePage(),
+          ),
         ],
       ),
     ],
@@ -99,4 +104,5 @@ class AppRoutes {
   static String donationDetail(String id) => '/donations/$id';
   static const impact = '/impact';
   static const community = '/community';
+  static const profile = '/profile';
 }
