@@ -10,8 +10,9 @@ class DonationFilterBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      height: 60,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      height: 80,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -26,20 +27,20 @@ class DonationFilterBar extends ConsumerWidget {
               initialValue: ref.watch(categoryFilterProvider) ?? 'Todas',
               decoration: const InputDecoration(
                 labelText: 'Categoría',
-                labelStyle: TextStyle(fontSize: 12, color: AppTheme.textMuted),
+                labelStyle: TextStyle(color: AppTheme.textMuted),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 isDense: true,
               ),
               icon: const Icon(Icons.category_outlined, size: 20),
               isExpanded: true,
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 14),
               items: ['Todas', ...AppConstants.foodCategories]
                   .map((category) => DropdownMenuItem(
                         value: category,
                         child: Text(
                           category,
-                          style: const TextStyle(fontSize: 12),
+                          style: const TextStyle(color: AppTheme.charcoal, fontWeight: FontWeight.w400),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ))
@@ -59,14 +60,14 @@ class DonationFilterBar extends ConsumerWidget {
               initialValue: ref.watch(statusFilterProvider) ?? 'Todas',
               decoration: const InputDecoration(
                 labelText: 'Estado',
-                labelStyle: TextStyle(fontSize: 12, color: AppTheme.textMuted),
+                labelStyle: TextStyle(color: AppTheme.textMuted),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 isDense: true,
               ),
               icon: const Icon(Icons.filter_list_outlined, size: 20),
               isExpanded: true,
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 14),
               items: [
                 'Todas',
                 AppConstants.statusAvailable,
@@ -78,7 +79,7 @@ class DonationFilterBar extends ConsumerWidget {
                         value: status,
                         child: Text(
                           _getStatusDisplayName(status),
-                          style: const TextStyle(fontSize: 12),
+                          style: const TextStyle(color: AppTheme.charcoal),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ))

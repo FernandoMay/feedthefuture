@@ -18,8 +18,13 @@ class DonationRepositoryImpl implements DonationRepository {
   @override
   Stream<List<Donation>> watchAvailableDonations() {
     return _col
-        .where('status', isEqualTo: AppConstants.statusAvailable)
-        .orderBy('expirationDate')
+        .where('status', whereIn: [
+          AppConstants.statusAvailable,
+          AppConstants.statusMatched,
+          AppConstants.statusInTransit,
+        ])
+        .where('expirationDate', isGreaterThan: DateTime.now())
+        .orderBy('expirationDate', descending: false)
         .limit(AppConstants.defaultPageSize)
         .snapshots()
         .map((snap) =>

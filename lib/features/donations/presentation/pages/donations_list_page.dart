@@ -35,12 +35,17 @@ class DonationsListPage extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
+            onPressed: () {
+              context.go('/notifications');
+            },
           ),
-          const CircleAvatar(
-            radius: 16,
-            backgroundColor: Color(0x1A2D8A55),
-            child: Icon(Icons.person_outline, size: 18, color: AppTheme.greenMid),
+          InkWell(
+            onTap: () => context.go('/profile'),
+            child: const CircleAvatar(
+              radius: 16,
+              backgroundColor: Color(0x1A2D8A55),
+              child: Icon(Icons.person_outline, size: 18, color: AppTheme.greenMid),
+            ),
           ),
           const SizedBox(width: 16),
         ],
