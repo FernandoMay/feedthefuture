@@ -14,7 +14,7 @@ feed_the_future = "F1T3F11111111111111111111111111111111111111"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
@@ -22,3 +22,7 @@ test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
 
 [toolchain]
 anchor_version = "0.31.1"
+
+# User wallet configuration
+[user_wallet]
+address = "2epmpFanBWitW5bkYTW1Hd9EVZHPkPZihbaH6GRH3fuD"
