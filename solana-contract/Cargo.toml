@@ -1,8 +1,6 @@
 [workspace]
 members = [
     "programs/feed-the-future",
-    "tests",
-    "client",
 ]
 resolver = "2"
 

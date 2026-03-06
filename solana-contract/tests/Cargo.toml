@@ -1,0 +1,13 @@
+[package]
+name = "feed-the-future-tests"
+version = "0.1.0"
+edition = "2021"
+
+[dev-dependencies]
+solana-program = "1.18.0"
+anchor-lang = "0.31.1"
+anchor-client = "0.31.1"
+
+[[bin]]
+name = "feed_the_future_tests"
+path = "feed_the_future.ts"

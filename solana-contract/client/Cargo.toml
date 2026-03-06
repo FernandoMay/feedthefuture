@@ -1,0 +1,9 @@
+[package]
+name = "feed-the-future-client"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+solana-program = "1.18.0"
+anchor-lang = "0.31.1"
+anchor-client = "0.31.1"

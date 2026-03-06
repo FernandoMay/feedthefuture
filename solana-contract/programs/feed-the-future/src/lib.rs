@@ -21,7 +21,7 @@ pub mod feed_the_future {
         let clock = Clock::get()?;
 
         user.authority = ctx.accounts.authority.key();
-        user.role = role;
+        user.role = role.clone();
         user.username = username;
         user.email = email;
         user.location = location;
@@ -38,7 +38,7 @@ pub mod feed_the_future {
         emit!(UserCreated {
             user: user.key(),
             authority: ctx.accounts.authority.key(),
-            role,
+            role: role.clone(),
             timestamp: clock.unix_timestamp,
         });
 
@@ -106,7 +106,7 @@ pub mod feed_the_future {
         let clock = Clock::get()?;
 
         donation.donor = ctx.accounts.donor.key();
-        donation.donation_data = donation_data;
+        donation.donation_data = donation_data.clone();
         donation.status = DonationStatus::Available;
         donation.risk_score = RiskScore::Safe;
         donation.matched_ngo = None;
@@ -355,9 +355,9 @@ pub mod feed_the_future {
     /// Create reward token for user
     pub fn create_reward_token(
         ctx: Context<CreateRewardToken>,
-        token_name: String,
-        token_symbol: String,
-        token_uri: String,
+        _token_name: String,
+        _token_symbol: String,
+        _token_uri: String,
     ) -> Result<()> {
         let user = &ctx.accounts.user;
         let clock = Clock::get()?;
@@ -798,7 +798,7 @@ pub struct GlobalConfigAccount {
     pub bump: u8,
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq, InitSpace)]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
 pub struct Location {
     pub latitude: f64,
     pub longitude: f64,
