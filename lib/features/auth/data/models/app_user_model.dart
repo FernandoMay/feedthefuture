@@ -14,6 +14,7 @@ class AppUserModel extends AppUser {
     required super.createdAt,
     super.isVerified = false,
     super.reputationScore = 0,
+    super.fcmTokens,
   });
 
   factory AppUserModel.fromFirestore(DocumentSnapshot doc) {
@@ -42,6 +43,7 @@ class AppUserModel extends AppUser {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       isVerified: data['isVerified'] as bool? ?? false,
       reputationScore: data['reputationScore'] as int? ?? 0,
+      fcmTokens: data['fcmTokens'] != null ? List<String>.from(data['fcmTokens']) : null,
     );
   }
 
@@ -71,6 +73,9 @@ class AppUserModel extends AppUser {
         if (location?.address != null) 'address': location?.address,
         if (location?.city != null) 'city': location?.city,
       };
+    }
+    if (fcmTokens != null) {
+      data['fcmTokens'] = fcmTokens;
     }
 
     return data;

@@ -13,6 +13,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'dart:async';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:feed_the_future/core/services/storage_service.dart';
+import 'package:feed_the_future/core/widgets/location_search_delegate.dart';
+import 'package:feed_the_future/core/services/location_service.dart';
 
 class DonationFormPage extends ConsumerStatefulWidget {
   const DonationFormPage({super.key});
@@ -40,6 +45,10 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
   LatLng _currentLocation = const LatLng(AppConstants.defaultLatitude, AppConstants.defaultLongitude);
   Set<Marker> _markers = {};
   bool _locationLoading = false;
+
+  // Image variables
+  File? _imageFile;
+  final _imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -256,6 +265,15 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
     super.dispose();
   }
 
+  Future<void> _pickImage() async {
+    final pickedFile = await _imagePicker.pickImage(source: ImageSource.camera, imageQuality: 70);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
@@ -272,6 +290,22 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
         );
       }
       return;
+    }
+
+    String? imageUrl;
+    if (_imageFile != null) {
+      final storageService = ref.read(storageServiceProvider);
+      final filename = 'donations/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final uploadResult = await storageService.uploadImage(
+        imageFile: _imageFile!,
+        path: filename, 
+      );
+      uploadResult.fold(
+        (failure) {}, // Ignore errors for now or log them
+        (url) {
+          imageUrl = url;
+        }
+      );
     }
 
     final donation = Donation(
@@ -296,7 +330,7 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
             : 'Ubicación seleccionada en mapa',
         city: 'CDMX',
       ),
-      photoUrls: const [],
+      photoUrls: imageUrl != null ? [imageUrl!] : const [],
       assignedNgoId: null,
       assignedNgoName: null,
       assignedVolunteerId: null,
@@ -479,6 +513,32 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                       prefixIcon: Icon(Icons.notes_outlined),
                     ),
                   ),
+                  const SizedBox(height: 16),
+                  InkWell(
+                    onTap: _pickImage,
+                    child: Container(
+                      height: 150,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppTheme.cream,
+                        border: Border.all(color: const Color(0x1A2D8A55)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: _imageFile != null 
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.file(_imageFile!, fit: BoxFit.cover),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.camera_alt_outlined, size: 40, color: AppTheme.textMuted),
+                              SizedBox(height: 8),
+                              Text('Agregar foto del alimento (Opcional)', style: TextStyle(color: AppTheme.textMuted)),
+                            ],
+                          ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -545,14 +605,59 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
               isActive: _currentStep >= 2,
               content: Column(
                 children: [
-                  TextFormField(
-                    controller: _addressCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Dirección de recolección',
-                      prefixIcon: Icon(Icons.location_on_outlined),
-                    ),
-                    validator: (v) =>
-                        v == null || v.isEmpty ? 'Campo requerido' : null,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _addressCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'Dirección de recolección',
+                            prefixIcon: Icon(Icons.location_on_outlined),
+                          ),
+                          validator: (v) =>
+                              v == null || v.isEmpty ? 'Campo requerido' : null,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppTheme.greenFresh,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.search, color: Colors.white),
+                          onPressed: () async {
+                            final PlaceDetails? result = await showSearch<PlaceDetails?>(
+                              context: context,
+                              delegate: LocationSearchDelegate(ref),
+                            );
+
+                            if (result != null) {
+                              setState(() {
+                                _addressCtrl.text = result.address;
+                                _currentLocation = LatLng(result.lat, result.lng);
+                                _markers = {
+                                  Marker(
+                                    markerId: const MarkerId('selected_location'),
+                                    position: _currentLocation,
+                                    infoWindow: const InfoWindow(title: 'Ubicación seleccionada'),
+                                    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+                                  ),
+                                };
+                              });
+
+                              if (_mapController != null) {
+                                _mapController!.animateCamera(
+                                  CameraUpdate.newCameraPosition(
+                                    CameraPosition(target: _currentLocation, zoom: 16.0),
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   Container(

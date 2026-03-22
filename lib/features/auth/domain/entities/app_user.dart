@@ -29,6 +29,7 @@ class AppUser extends Equatable {
   final DateTime createdAt;
   final bool isVerified;
   final int reputationScore;
+  final List<String>? fcmTokens;
 
   const AppUser({
     required this.id,
@@ -42,6 +43,7 @@ class AppUser extends Equatable {
     required this.createdAt,
     this.isVerified = false,
     this.reputationScore = 0,
+    this.fcmTokens,
   });
 
   @override
@@ -57,6 +59,7 @@ class AppUser extends Equatable {
         createdAt,
         isVerified,
         reputationScore,
+        fcmTokens,
       ];
 
   AppUser copyWith({
@@ -71,6 +74,7 @@ class AppUser extends Equatable {
     DateTime? createdAt,
     bool? isVerified,
     int? reputationScore,
+    List<String>? fcmTokens,
   }) {
     return AppUser(
       id: id ?? this.id,
@@ -84,6 +88,7 @@ class AppUser extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       isVerified: isVerified ?? this.isVerified,
       reputationScore: reputationScore ?? this.reputationScore,
+      fcmTokens: fcmTokens ?? this.fcmTokens,
     );
   }
 }

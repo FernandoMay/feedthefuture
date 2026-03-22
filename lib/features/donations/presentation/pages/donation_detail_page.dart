@@ -52,18 +52,23 @@ class _DonationDetailView extends ConsumerWidget {
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 color: AppTheme.greenDeep,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 60),
-                      Text(
-                        _categoryEmoji(donation.category),
-                        style: const TextStyle(fontSize: 64),
+                child: donation.photoUrls.isNotEmpty
+                    ? Image.network(
+                        donation.photoUrls.first,
+                        fit: BoxFit.cover,
+                      )
+                    : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 60),
+                            Text(
+                              _categoryEmoji(donation.category),
+                              style: const TextStyle(fontSize: 64),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
               ),
             ),
           ),
