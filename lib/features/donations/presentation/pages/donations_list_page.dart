@@ -269,7 +269,6 @@ class _SummaryItem extends StatelessWidget {
     required this.value,
     required this.label,
     required this.icon,
-    this.urgent = false,
   });
 
   @override

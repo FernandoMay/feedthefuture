@@ -237,7 +237,7 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
         // Mostrar snackbar de confirmación
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Dirección: ${address.length > 60 ? address.substring(0, 60) + '...' : address}'),
+            content: Text('Dirección: ${address.length > 60 ? '${address.substring(0, 60)}...' : address}'),
             backgroundColor: AppTheme.greenFresh,
             duration: const Duration(seconds: 3),
           ),
@@ -444,9 +444,9 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                           : null,
                     ),
                     child: _loading && _currentStep == 2
-                        ? Row(
+                        ? const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               SizedBox(
                                 height: 18,
                                 width: 18,
@@ -529,9 +529,9 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                             borderRadius: BorderRadius.circular(12),
                             child: Image.file(_imageFile!, fit: BoxFit.cover),
                           )
-                        : Column(
+                        : const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Icon(Icons.camera_alt_outlined, size: 40, color: AppTheme.textMuted),
                               SizedBox(height: 8),
                               Text('Agregar foto del alimento (Opcional)', style: TextStyle(color: AppTheme.textMuted)),
