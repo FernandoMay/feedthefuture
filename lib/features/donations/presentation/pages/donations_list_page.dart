@@ -263,13 +263,12 @@ class _SummaryItem extends StatelessWidget {
   final String value;
   final String label;
   final String icon;
-  final bool urgent;
+  final bool urgent=false;
 
   const _SummaryItem({
     required this.value,
     required this.label,
     required this.icon,
-    this.urgent = false,
   });
 
   @override

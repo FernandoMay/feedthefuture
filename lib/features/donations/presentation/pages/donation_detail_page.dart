@@ -469,8 +469,8 @@ class _RatingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: Get actual ratings from provider
-    final averageRating = 4.5;
-    final totalRatings = 12;
+    const averageRating = 4.5;
+    const totalRatings = 12;
     
     return Container(
       margin: const EdgeInsets.all(16),

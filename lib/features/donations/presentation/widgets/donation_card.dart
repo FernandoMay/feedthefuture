@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:feed_the_future/core/theme/app_theme.dart';
-import 'package:feed_the_future/core/routes/app_router.dart';
 import 'package:feed_the_future/features/donations/domain/entities/donation.dart';
 
 class DonationCard extends ConsumerWidget {

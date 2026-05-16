@@ -135,27 +135,25 @@ class _DonationsMapPageState extends ConsumerState<DonationsMapPage> {
     final markers = <Marker>{};
     
     for (final donation in donations) {
-      if (donation.location != null) {
-        final marker = Marker(
-          markerId: MarkerId(donation.id),
-          position: LatLng(
-            donation.location!.latitude,
-            donation.location!.longitude,
-          ),
-          infoWindow: InfoWindow(
-            title: donation.name,
-            snippet: '${donation.quantity} ${donation.unit}',
-          ),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            donation.status == 'available' 
-                ? BitmapDescriptor.hueGreen 
-                : BitmapDescriptor.hueOrange,
-          ),
-          onTap: () => _onMarkerTapped(donation),
-        );
-        markers.add(marker);
-      }
-    }
+      final marker = Marker(
+        markerId: MarkerId(donation.id),
+        position: LatLng(
+          donation.location!.latitude,
+          donation.location!.longitude,
+        ),
+        infoWindow: InfoWindow(
+          title: donation.name,
+          snippet: '${donation.quantity} ${donation.unit}',
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          donation.status == 'available' 
+              ? BitmapDescriptor.hueGreen 
+              : BitmapDescriptor.hueOrange,
+        ),
+        onTap: () => _onMarkerTapped(donation),
+      );
+      markers.add(marker);
+        }
     
     setState(() {
       _markers = markers;
@@ -223,7 +221,7 @@ class _DonationsMapPageState extends ConsumerState<DonationsMapPage> {
                 ),
               const SizedBox(height: 8),
               Text(
-                _selectedDonation!.location?.address ?? 'Ubicación no disponible',
+                _selectedDonation!.location.address ?? 'Ubicación no disponible',
                 style: TextStyle(
                   color: Colors.grey[600],
                   fontSize: 14,
@@ -297,9 +295,7 @@ class _DonationsMapPageState extends ConsumerState<DonationsMapPage> {
   }
 
   void _openDirections(Donation donation) {
-    if (donation.location == null) return;
-    
-    final url = 'https://www.google.com/maps/dir/?api=1&destination=${donation.location!.latitude},${donation.location!.longitude}';
+    final url = 'https://www.google.com/maps/dir/?api=1&destination=${donation.location.latitude},${donation.location.longitude}';
     // TODO: Open URL using url_launcher
   }
 }
