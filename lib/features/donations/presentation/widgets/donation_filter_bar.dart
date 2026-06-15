@@ -16,7 +16,7 @@ class DonationFilterBar extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.greenFresh.withOpacity(0.2)),
+        border: Border.all(color: AppTheme.greenFresh.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -106,7 +106,7 @@ class DonationFilterBar extends ConsumerWidget {
             ),
             tooltip: 'Ordenar por fecha',
             style: IconButton.styleFrom(
-              backgroundColor: AppTheme.greenFresh.withOpacity(0.1),
+              backgroundColor: AppTheme.greenFresh.withValues(alpha: 0.1),
               foregroundColor: AppTheme.greenFresh,
             ),
           ),

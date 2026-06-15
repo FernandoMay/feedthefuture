@@ -440,7 +440,7 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
                     onPressed: _loading ? null : details.onStepContinue,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _loading && _currentStep == 2 
-                          ? AppTheme.greenLime.withOpacity(0.7)
+                          ? AppTheme.greenLime.withValues(alpha: 0.7)
                           : null,
                     ),
                     child: _loading && _currentStep == 2
@@ -688,7 +688,7 @@ class _DonationFormPageState extends ConsumerState<DonationFormPage> {
           ),
           if (_locationLoading)
             Container(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
               child: const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

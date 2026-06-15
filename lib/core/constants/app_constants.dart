@@ -2,7 +2,7 @@ class AppConstants {
   AppConstants._();
 
   // App
-  static const String appName = 'Feed the Future';
+  static const String appName = 'FeedTheFuture';
   static const String appVersion = '1.0.0';
 
   // Firestore Collections

@@ -21,12 +21,11 @@ class AppTheme {
   static ThemeData get light => ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: greenFresh,
+          seedColor: const Color(0xFF2E7D32),
           primary: greenDeep,
           secondary: greenFresh,
           tertiary: earth,
           surface: cream,
-          background: cream,
           onPrimary: greenLime,
           onSecondary: Colors.white,
           onSurface: charcoal,
@@ -163,12 +162,11 @@ class AppTheme {
   static ThemeData get dark => ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: greenFresh,
+          seedColor: const Color(0xFF2E7D32),
           brightness: Brightness.dark,
           primary: greenLime,
           secondary: greenFresh,
           surface: const Color(0xFF0D2018),
-          background: const Color(0xFF080F0B),
           onPrimary: greenDeep,
           onSurface: cream,
           error: dangerRed,

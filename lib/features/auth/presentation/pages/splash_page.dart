@@ -69,7 +69,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
                     borderRadius: BorderRadius.circular(28),
                     boxShadow: [
                       BoxShadow(
-                        color: AppTheme.greenLime.withOpacity(0.3),
+                        color: AppTheme.greenLime.withValues(alpha: 0.3),
                         blurRadius: 40,
                         spreadRadius: 4,
                       ),
@@ -97,7 +97,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
                   style: TextStyle(
                     fontFamily: 'DMSans',
                     fontSize: 14,
-                    color: AppTheme.greenLime.withOpacity(0.7),
+                    color: AppTheme.greenLime.withValues(alpha: 0.7),
                     letterSpacing: 0.3,
                   ),
                 ),
@@ -107,7 +107,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
                   height: 32,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.5,
-                    color: AppTheme.greenLime.withOpacity(0.5),
+                    color: AppTheme.greenLime.withValues(alpha: 0.5),
                   ),
                 ),
               ],

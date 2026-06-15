@@ -128,17 +128,17 @@ class _RiskLabel extends StatelessWidget {
     String label;
     switch (riskScore) {
       case 'SAFE':
-        bg = AppTheme.greenFresh.withOpacity(0.12);
+        bg = AppTheme.greenFresh.withValues(alpha: 0.12);
         fg = AppTheme.greenMid;
         label = '✓ Seguro';
         break;
       case 'CONDITIONAL':
-        bg = AppTheme.warningAmber.withOpacity(0.12);
+        bg = AppTheme.warningAmber.withValues(alpha: 0.12);
         fg = AppTheme.warningAmber;
         label = '⚠ Condicional';
         break;
       default:
-        bg = AppTheme.dangerRed.withOpacity(0.12);
+        bg = AppTheme.dangerRed.withValues(alpha: 0.12);
         fg = AppTheme.dangerRed;
         label = '✗ Rechazado';
     }
@@ -381,9 +381,9 @@ class _BottomActions extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppTheme.greenDeep.withOpacity(0.1),
+                color: AppTheme.greenDeep.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.greenDeep.withOpacity(0.3)),
+                border: Border.all(color: AppTheme.greenDeep.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
@@ -512,9 +512,9 @@ class _RatingSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
+              const Text(
                 '($totalRatings calificaciones)',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white70,
                   fontSize: 14,
                 ),
@@ -535,7 +535,7 @@ class _RatingSection extends StatelessWidget {
                 // TODO: Navigate to all reviews
               },
               child: const Text(
-                'Ver todas las calificaciones',
+                  'Ver todas las calificaciones',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
@@ -561,7 +561,7 @@ class _RatingSection extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -571,7 +571,7 @@ class _RatingSection extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundColor: Colors.white.withOpacity(0.3),
+                backgroundColor: Colors.white.withValues(alpha: 0.3),
                 child: const Icon(
                   Icons.person,
                   size: 16,

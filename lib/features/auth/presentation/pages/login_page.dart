@@ -1,3 +1,4 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:feed_the_future/core/routes/app_router.dart';
 import 'package:feed_the_future/core/theme/app_theme.dart';
 import 'package:feed_the_future/features/auth/presentation/providers/auth_provider.dart';

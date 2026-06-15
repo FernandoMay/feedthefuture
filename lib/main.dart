@@ -42,7 +42,7 @@ class FeedTheFutureApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      title: 'Feed the Future',
+      title: 'FeedTheFuture',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,

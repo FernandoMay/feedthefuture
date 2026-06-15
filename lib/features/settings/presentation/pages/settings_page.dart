@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:feed_the_future/core/theme/app_theme.dart';
@@ -267,17 +268,21 @@ class SettingsPage extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            RadioListTile<String>(
+            ListTile(
               title: const Text('Español'),
-              value: 'es',
-              groupValue: 'es',
-              onChanged: (value) {},
+              leading: Radio<String>(
+                value: 'es',
+                groupValue: 'es',
+                onChanged: (value) {},
+              ),
             ),
-            RadioListTile<String>(
+            ListTile(
               title: const Text('English'),
-              value: 'en',
-              groupValue: 'es',
-              onChanged: (value) {},
+              leading: Radio<String>(
+                value: 'en',
+                groupValue: 'es',
+                onChanged: (value) {},
+              ),
             ),
           ],
         ),

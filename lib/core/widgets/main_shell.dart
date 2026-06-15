@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:feed_the_future/features/auth/presentation/providers/auth_provider.dart';
 
 class MainShell extends ConsumerWidget {
   final Widget child;
@@ -10,7 +9,6 @@ class MainShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).matchedLocation;
-    final user = ref.watch(currentUserProvider);
 
     int selectedIndex = 0;
     if (location.startsWith('/impact')) {
@@ -102,7 +100,7 @@ class MainShell extends ConsumerWidget {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 12,
               offset: const Offset(0, -2),
             ),
@@ -147,39 +145,5 @@ class MainShell extends ConsumerWidget {
     );
   }
 
-  Widget _buildAppTitle(int selectedIndex) {
-    switch (selectedIndex) {
-      case 0:
-        return const Text('Feed the Future');
-      case 1:
-        return const Text('Impacto');
-      case 2:
-        return const Text('Comunidad');
-      default:
-        return const Text('Feed the Future');
-    }
-  }
 
-  void _showLogoutConfirmation(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Cerrar Sesión'),
-        content: const Text('¿Estás seguro de que quieres cerrar sesión?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ref.read(authNotifierProvider.notifier).signOut();
-            },
-            child: const Text('Cerrar Sesión', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-  }
 }

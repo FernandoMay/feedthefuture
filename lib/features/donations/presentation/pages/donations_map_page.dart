@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:feed_the_future/core/theme/app_theme.dart';
 import 'package:feed_the_future/core/routes/app_router.dart';
 import 'package:feed_the_future/features/donations/domain/entities/donation.dart';
 import 'package:feed_the_future/features/donations/presentation/providers/donation_provider.dart';
-import 'package:feed_the_future/features/donations/presentation/widgets/donation_card.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DonationsMapPage extends ConsumerStatefulWidget {
   const DonationsMapPage({super.key});
@@ -138,8 +137,8 @@ class _DonationsMapPageState extends ConsumerState<DonationsMapPage> {
       final marker = Marker(
         markerId: MarkerId(donation.id),
         position: LatLng(
-          donation.location!.latitude,
-          donation.location!.longitude,
+          donation.location.latitude,
+          donation.location.longitude,
         ),
         infoWindow: InfoWindow(
           title: donation.name,
@@ -221,7 +220,7 @@ class _DonationsMapPageState extends ConsumerState<DonationsMapPage> {
                 ),
               const SizedBox(height: 8),
               Text(
-                _selectedDonation!.location.address ?? 'Ubicación no disponible',
+                _selectedDonation!.location.address,
                 style: TextStyle(
                   color: Colors.grey[600],
                   fontSize: 14,
@@ -296,6 +295,6 @@ class _DonationsMapPageState extends ConsumerState<DonationsMapPage> {
 
   void _openDirections(Donation donation) {
     final url = 'https://www.google.com/maps/dir/?api=1&destination=${donation.location.latitude},${donation.location.longitude}';
-    // TODO: Open URL using url_launcher
+    launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   }
 }
