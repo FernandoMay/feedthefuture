@@ -1,5 +1,27 @@
 # Feed the Future - Solana Smart Contract
 
+## Program ID (Devnet)
+
+| | |
+|---|---|
+| **Program ID / Dirección en Devnet** | `B4Cx6Vkm2VKiTGd8hpgCPbCDR2FBxULvGNAwEmVc8j4p` |
+| Cluster | `devnet` |
+| Keypair | `~/.config/solana/ftf_program.json` (copia: `target/deploy/feed_the_future-keypair.json`) |
+| Fee-payer (Anchor) | `HHK352gcEYtYD23siG1D6jQfmk8oRuSw93nPW2F5MUGZ` (`~/.config/solana/id.json`) |
+| Estado | ⏳ Pendiente de fondos — ver [`DEPLOYMENT.md`](DEPLOYMENT.md) |
+
+La dirección en Devnet **es la que está dentro del `declare_id!`** en
+`programs/feed-the-future/src/lib.rs`. El mismo ID está sincronizado en
+`Anchor.toml` (`[programs.localnet]` y `[programs.devnet]`),
+`flutter_config.dart` (`FeedTheFutureConfig.programId`) y
+`scripts/run-tests.sh`.
+
+> ⚠️ `Hz1i48mekLsLfEwv1a9SjjV9uDCh5UpDtrSKnLzPh5PM` **no** existe en este
+> repositorio. El único ID real es el de arriba.
+
+Explorer:
+https://explorer.solana.com/address/B4Cx6Vkm2VKiTGd8hpgCPbCDR2FBxULvGNAwEmVc8j4p?cluster=devnet
+
 ## Overview
 
 Feed the Future is a comprehensive Solana smart contract built with Anchor for managing food donations, pickups, deliveries, and user reputation in a decentralized food rescue platform.
@@ -61,14 +83,15 @@ The contract uses Program Derived Addresses (PDAs) for efficient data storage an
    anchor build
    ```
 
-4. Run tests:
+4. Run tests (starts a local validator loaded with the program, then runs the suite):
    ```bash
-   anchor test
+   ./scripts/run-tests.sh
    ```
+   Latest result: **30 passing / 0 failing** (log: `out/test_mocha.log`).
 
-5. Deploy to localnet:
+5. Deploy to Devnet (fee-payer needs ≥ 3 SOL, see [`DEPLOYMENT.md`](DEPLOYMENT.md)):
    ```bash
-   anchor deploy
+   anchor deploy --provider.cluster devnet
    ```
 
 ## Usage
@@ -183,19 +206,27 @@ The contract is designed to integrate seamlessly with the Feed the Future Flutte
 ### Running Tests
 
 ```bash
-anchor test
+./scripts/run-tests.sh    # 30 passing / 0 failing
 ```
 
 ### Local Development
 
 ```bash
-solana-test-validator
-anchor deploy
+./scripts/start-validator.sh   # or: solana-test-validator
+anchor deploy --provider.cluster localnet
 ```
 
 ### Program ID
 
-Update the `declare_id!` in `lib.rs` with your deployed program ID.
+`B4Cx6Vkm2VKiTGd8hpgCPbCDR2FBxULvGNAwEmVc8j4p` — el que está dentro del
+`declare_id!` en `lib.rs` y el que se usa como dirección en Devnet. Si
+regeneras el keypair con `anchor keys list`, ambos (keypair y `declare_id!`)
+deben coincidir; no cambies solo uno.
+
+### Deployment
+
+Pasos de deploy y verificación en Devnet (incluyendo cómo conseguir SOL):
+ver [`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 ## License
 

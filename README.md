@@ -120,6 +120,26 @@ flutter run
 
 ---
 
+## ⛓️ Contrato Solana (`solana-contract/`)
+
+Programa Anchor que gestiona donaciones, pickups, entregas y reputación en
+cadena. Detalles completos en [`solana-contract/README.md`](solana-contract/README.md).
+
+| | |
+|---|---|
+| **Dirección en Devnet** (= `declare_id!`) | `B4Cx6Vkm2VKiTGd8hpgCPbCDR2FBxULvGNAwEmVc8j4p` |
+| Cluster | `devnet` |
+| Tests | `cd solana-contract && ./scripts/run-tests.sh` → **30 passing / 0 failing** |
+| Build | `cd solana-contract && anchor build` |
+| Deploy | `anchor deploy --provider.cluster devnet` (ver [`solana-contract/DEPLOYMENT.md`](solana-contract/DEPLOYMENT.md)) |
+
+La dirección en Devnet es **exactamente la que está dentro del `declare_id!`**
+en `solana-contract/programs/feed-the-future/src/lib.rs`, sincronizada con
+`Anchor.toml` y `solana-contract/flutter_config.dart`. El ID
+`Hz1i48mekLsLfEwv1a9SjjV9uDCh5UpDtrSKnLzPh5PM` no existe en este repo.
+
+---
+
 ## 🔥 Firestore — Estructura de colecciones
 
 ```
