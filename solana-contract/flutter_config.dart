@@ -8,7 +8,7 @@ class FeedTheFutureConfig {
   static const String wsUrl = 'wss://api.devnet.solana.com';
   
   // Contract Configuration
-  static const String programId = 'F1T3F11111111111111111111111111111111111111'; // Update after deploy
+  static const String programId = 'B4Cx6Vkm2VKiTGd8hpgCPbCDR2FBxULvGNAwEmVc8j4p'; // Verified on Devnet (see solana-contract/DEPLOYMENT.md)
   
   // User Wallet (for testing)
   static const String testWalletAddress = '2epmpFanBWitW5bkYTW1Hd9EVZHPkPZihbaH6GRH3fuD';

@@ -14,7 +14,7 @@ The repository already contains a substantial Solana implementation. Do not repl
 - Existing state accounts include user, donation, pickup request, delivery request and global configuration accounts; events are defined for the main lifecycle actions.
 - Existing Flutter app is Firebase-backed. Its `pubspec.yaml` currently has no Solana client or wallet dependency.
 - `solana-contract/flutter_config.dart` is a template: PDA methods return placeholder strings and service methods only print TODO messages. It is not wired into the Flutter app.
-- `Anchor.toml`, `lib.rs` and the Flutter template currently contain the same obvious placeholder Program ID: `F1T3F11111111111111111111111111111111111111`. Treat it as **not a verified deployed Program ID** until a real build, keypair and Devnet lookup prove otherwise.
+- `Anchor.toml`, `lib.rs` and `flutter_config.dart` all use the same real Program ID: `B4Cx6Vkm2VKiTGd8hpgCPbCDR2FBxULvGNAwEmVc8j4p`, and `target/deploy/feed_the_future-keypair.json` holds the matching keypair (see `DEPLOYMENT.md` for the Devnet verification).
 - `solana-contract/tests/feed_the_future.ts` currently has one initialization test and catches/logs errors rather than rethrowing; that can make a failing instruction look like a passing test.
 - `solana-contract/tests/Cargo.toml` declares a Rust binary whose path is a TypeScript file. The test/build layout needs to be normalized.
 - `solana-contract/target/` is present in the repository tree. Build outputs should be generated in CI/local builds, not committed as source.

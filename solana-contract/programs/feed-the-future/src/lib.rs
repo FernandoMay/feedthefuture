@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token};
 
-declare_id!("F1T3F11111111111111111111111111111111111111");
+declare_id!("B4Cx6Vkm2VKiTGd8hpgCPbCDR2FBxULvGNAwEmVc8j4p");
 
 #[program]
 pub mod feed_the_future {
@@ -14,16 +14,15 @@ pub mod feed_the_future {
         ctx: Context<InitializeUser>,
         role: UserRole,
         username: String,
-        email: String,
         location: Location,
     ) -> Result<()> {
         let user = &mut ctx.accounts.user;
         let clock = Clock::get()?;
 
+        require!(!username.is_empty(), CustomError::InvalidName);
         user.authority = ctx.accounts.authority.key();
         user.role = role.clone();
         user.username = username;
-        user.email = email;
         user.location = location;
         user.reputation_score = 100; // Start with neutral reputation
         user.total_donations = 0;
@@ -45,21 +44,18 @@ pub mod feed_the_future {
         Ok(())
     }
 
-    /// Update user profile information
+    /// Update user profile information (only username and location; no private fields)
     pub fn update_user_profile(
         ctx: Context<UpdateUserProfile>,
         username: Option<String>,
-        email: Option<String>,
         location: Option<Location>,
     ) -> Result<()> {
         let user = &mut ctx.accounts.user;
         let clock = Clock::get()?;
 
         if let Some(username) = username {
+            require!(!username.is_empty(), CustomError::InvalidName);
             user.username = username;
-        }
-        if let Some(email) = email {
-            user.email = email;
         }
         if let Some(location) = location {
             user.location = location;
@@ -75,11 +71,13 @@ pub mod feed_the_future {
         Ok(())
     }
 
-    /// Verify a user (admin only)
-    pub fn verify_user(ctx: Context<VerifyUser>) -> Result<()> {
+    /// Verify a user (admin only; cannot verify the admin themselves)
+    pub fn verify_user(ctx: Context<VerifyUser>, target_user: Pubkey) -> Result<()> {
         let user = &mut ctx.accounts.user;
         let clock = Clock::get()?;
 
+        // Cannot verify the admin themselves: the admin is the signer, the target is the arg.
+        require!(target_user != ctx.accounts.authority.key(), CustomError::Unauthorized);
         require!(user.is_active, CustomError::UserInactive);
         require!(!user.is_verified, CustomError::UserAlreadyVerified);
 
@@ -105,7 +103,12 @@ pub mod feed_the_future {
         let donation = &mut ctx.accounts.donation;
         let clock = Clock::get()?;
 
+        require!(donation_data.quantity > 0, CustomError::InvalidQuantity);
+        require!(!donation_data.name.is_empty(), CustomError::InvalidName);
+        require!(donation_data.nonce != 0, CustomError::InvalidNonce);
+
         donation.donor = ctx.accounts.donor.key();
+        donation.nonce = donation_data.nonce;
         donation.donation_data = donation_data.clone();
         donation.status = DonationStatus::Available;
         donation.risk_score = RiskScore::Safe;
@@ -134,7 +137,7 @@ pub mod feed_the_future {
         Ok(())
     }
 
-    /// Match donation with NGO
+    /// Match donation with NGO (NGO must sign; bound to the signed NGO user; respects min reputation)
     pub fn match_donation(
         ctx: Context<MatchDonation>,
         ngo_pda: Pubkey,
@@ -145,6 +148,12 @@ pub mod feed_the_future {
         require!(
             donation.status == DonationStatus::Available,
             CustomError::DonationNotAvailable
+        );
+        // Bind the claimed NGO to the actual signer.
+        require!(ngo_pda == ctx.accounts.ngo.key(), CustomError::Unauthorized);
+        require!(
+            ctx.accounts.ngo_user.reputation_score >= ctx.accounts.config.config.min_reputation_for_matching,
+            CustomError::InsufficientReputation
         );
 
         donation.status = DonationStatus::Matched;
@@ -160,7 +169,7 @@ pub mod feed_the_future {
         Ok(())
     }
 
-    /// Schedule pickup for donation
+    /// Schedule pickup for donation (only when Matched; volunteer must be the assigned picker's role)
     pub fn schedule_pickup(
         ctx: Context<SchedulePickup>,
         pickup_time: i64,
@@ -173,6 +182,7 @@ pub mod feed_the_future {
             donation.status == DonationStatus::Matched,
             CustomError::DonationNotMatched
         );
+        require!(pickup_time > clock.unix_timestamp, CustomError::InvalidTimestamp);
 
         donation.status = DonationStatus::Pending;
         donation.pickup_volunteer = Some(ctx.accounts.volunteer.key());
@@ -215,9 +225,14 @@ pub mod feed_the_future {
         let clock = Clock::get()?;
 
         require!(
+            donation.status == DonationStatus::Pending,
+            CustomError::DonationNotPending
+        );
+        require!(
             pickup_request.status == PickupStatus::Scheduled,
             CustomError::PickupNotScheduled
         );
+        require!(actual_quantity > 0, CustomError::InvalidQuantity);
 
         donation.status = DonationStatus::InTransit;
         donation.donation_data.quantity = actual_quantity;
@@ -250,6 +265,7 @@ pub mod feed_the_future {
             donation.status == DonationStatus::InTransit,
             CustomError::DonationNotInTransit
         );
+        require!(delivery_time > clock.unix_timestamp, CustomError::InvalidTimestamp);
 
         donation.delivery_volunteer = Some(ctx.accounts.volunteer.key());
         donation.delivery_scheduled_at = Some(delivery_time);
@@ -294,6 +310,15 @@ pub mod feed_the_future {
         require!(
             delivery_request.status == DeliveryStatus::Scheduled,
             CustomError::DeliveryNotScheduled
+        );
+        require!(
+            donation.status == DonationStatus::InTransit,
+            CustomError::DonationNotInTransit
+        );
+        require!(received_quantity > 0, CustomError::InvalidQuantity);
+        require!(
+            received_quantity <= donation.donation_data.quantity,
+            CustomError::InvalidQuantity
         );
 
         donation.status = DonationStatus::Delivered;
@@ -352,19 +377,25 @@ pub mod feed_the_future {
         Ok(())
     }
 
-    /// Create reward token for user
+    /// Create a reward token identity for a user.
+    ///
+    /// NOTE: This creates a real SPL token mint (0 decimals, mint authority = the signer,
+    /// per the Seeds in `CreateRewardToken`) and emits `RewardTokenCreated`. Tokens are NOT
+    /// minted/transferred to anyone by this instruction by default; that is a separate policy
+    /// decision (see REWARD_TOKEN_DECISION.md).
     pub fn create_reward_token(
         ctx: Context<CreateRewardToken>,
-        _token_name: String,
-        _token_symbol: String,
-        _token_uri: String,
+        token_name: String,
+        token_symbol: String,
+        token_uri: String,
     ) -> Result<()> {
         let user = &ctx.accounts.user;
         let clock = Clock::get()?;
-        
-        // For now, just emit the event - metadata creation can be done client-side
-        // or in a separate transaction to avoid complexity
-        
+
+        require!(!token_name.is_empty() && token_name.len() <= 50, CustomError::InvalidName);
+        require!(token_symbol.len() <= 20, CustomError::InvalidName);
+        require!(token_uri.len() <= 500, CustomError::InvalidName);
+
         emit!(RewardTokenCreated {
             mint: ctx.accounts.mint.key(),
             user: user.authority,
@@ -406,6 +437,11 @@ pub mod feed_the_future {
         let global_config = &mut ctx.accounts.global_config;
         let clock = Clock::get()?;
 
+        require!(
+            ctx.accounts.authority_user.role == UserRole::Admin,
+            CustomError::Unauthorized
+        );
+
         global_config.config = new_config;
         global_config.updated_at = clock.unix_timestamp;
 
@@ -440,22 +476,24 @@ pub struct InitializeUser<'info> {
 
 #[derive(Accounts)]
 pub struct UpdateUserProfile<'info> {
+    // `authority` is the signer; the user's PDA is [user, authority] (has_one check below).
     #[account(
         mut,
-        seeds = [b"user", user.authority.as_ref()],
+        seeds = [b"user", authority.key().as_ref()],
         bump = user.bump,
         has_one = authority
     )]
     pub user: Account<'info, UserAccount>,
-    
+
     pub authority: Signer<'info>,
 }
 
 #[derive(Accounts)]
+#[instruction(target_user: Pubkey)]
 pub struct VerifyUser<'info> {
     #[account(
         mut,
-        seeds = [b"user", user.authority.as_ref()],
+        seeds = [b"user", target_user.as_ref()],
         bump = user.bump
     )]
     pub user: Account<'info, UserAccount>,
@@ -477,7 +515,7 @@ pub struct CreateDonation<'info> {
         init,
         payer = donor,
         space = 8 + Donation::INIT_SPACE,
-        seeds = [b"donation", donor.key().as_ref(), &Clock::get().unwrap().unix_timestamp.to_le_bytes()],
+        seeds = [b"donation", donor.key().as_ref(), &donation_data.nonce.to_le_bytes()],
         bump
     )]
     pub donation: Account<'info, Donation>,
@@ -498,11 +536,11 @@ pub struct CreateDonation<'info> {
 
 #[derive(Accounts)]
 pub struct MatchDonation<'info> {
-    #[account(
-        mut,
-        seeds = [b"donation", donation.donor.as_ref(), &donation.created_at.to_le_bytes()],
-        bump = donation.bump
-    )]
+    // No PDA seeds on the donation in lifecycle instructions: seeds can't reference the
+    // account's own fields, and the donation PDA is derived client-side from
+    // (donor, nonce) at creation time (see create_donation). Ownership of the lifecycle
+    // is bound by pickup_request/delivery_request volunteer constraints below.
+    #[account(mut)]
     pub donation: Account<'info, Donation>,
     
     #[account(
@@ -511,17 +549,23 @@ pub struct MatchDonation<'info> {
         constraint = ngo_user.role == UserRole::Ngo || ngo_user.role == UserRole::Admin @ CustomError::InvalidRole
     )]
     pub ngo_user: Account<'info, UserAccount>,
-    
+
+    #[account(
+        seeds = [b"config"],
+        bump = config.bump
+    )]
+    pub config: Account<'info, GlobalConfigAccount>,
+
     pub ngo: Signer<'info>,
 }
 
 #[derive(Accounts)]
 pub struct SchedulePickup<'info> {
-    #[account(
-        mut,
-        seeds = [b"donation", donation.donor.as_ref(), &donation.created_at.to_le_bytes()],
-        bump = donation.bump
-    )]
+    // No PDA seeds on the donation in lifecycle instructions: seeds can't reference the
+    // account's own fields, and the donation PDA is derived client-side from
+    // (donor, nonce) at creation time (see create_donation). Ownership of the lifecycle
+    // is bound by pickup_request/delivery_request volunteer constraints below.
+    #[account(mut)]
     pub donation: Account<'info, Donation>,
     
     #[account(
@@ -549,11 +593,11 @@ pub struct SchedulePickup<'info> {
 
 #[derive(Accounts)]
 pub struct CompletePickup<'info> {
-    #[account(
-        mut,
-        seeds = [b"donation", donation.donor.as_ref(), &donation.created_at.to_le_bytes()],
-        bump = donation.bump
-    )]
+    // No PDA seeds on the donation in lifecycle instructions: seeds can't reference the
+    // account's own fields, and the donation PDA is derived client-side from
+    // (donor, nonce) at creation time (see create_donation). Ownership of the lifecycle
+    // is bound by pickup_request/delivery_request volunteer constraints below.
+    #[account(mut)]
     pub donation: Account<'info, Donation>,
     
     #[account(
@@ -575,11 +619,11 @@ pub struct CompletePickup<'info> {
 
 #[derive(Accounts)]
 pub struct ScheduleDelivery<'info> {
-    #[account(
-        mut,
-        seeds = [b"donation", donation.donor.as_ref(), &donation.created_at.to_le_bytes()],
-        bump = donation.bump
-    )]
+    // No PDA seeds on the donation in lifecycle instructions: seeds can't reference the
+    // account's own fields, and the donation PDA is derived client-side from
+    // (donor, nonce) at creation time (see create_donation). Ownership of the lifecycle
+    // is bound by pickup_request/delivery_request volunteer constraints below.
+    #[account(mut)]
     pub donation: Account<'info, Donation>,
     
     #[account(
@@ -607,11 +651,11 @@ pub struct ScheduleDelivery<'info> {
 
 #[derive(Accounts)]
 pub struct CompleteDelivery<'info> {
-    #[account(
-        mut,
-        seeds = [b"donation", donation.donor.as_ref(), &donation.created_at.to_le_bytes()],
-        bump = donation.bump
-    )]
+    // No PDA seeds on the donation in lifecycle instructions: seeds can't reference the
+    // account's own fields, and the donation PDA is derived client-side from
+    // (donor, nonce) at creation time (see create_donation). Ownership of the lifecycle
+    // is bound by pickup_request/delivery_request volunteer constraints below.
+    #[account(mut)]
     pub donation: Account<'info, Donation>,
     
     #[account(
@@ -622,14 +666,12 @@ pub struct CompleteDelivery<'info> {
     )]
     pub delivery_request: Account<'info, DeliveryRequest>,
     
+    #[account(mut)]
+    pub donor_account: Account<'info, UserAccount>,
+
+    // Must be mut: complete_delivery bumps the volunteer's reputation in place.
     #[account(
         mut,
-        seeds = [b"user", donation.donor.as_ref()],
-        bump = donor_account.bump
-    )]
-    pub donor_account: Account<'info, UserAccount>,
-    
-    #[account(
         seeds = [b"user", volunteer.key().as_ref()],
         bump = volunteer_account.bump
     )]
@@ -712,7 +754,13 @@ pub struct UpdateConfig<'info> {
         has_one = authority
     )]
     pub global_config: Account<'info, GlobalConfigAccount>,
-    
+
+    #[account(
+        seeds = [b"user", authority.key().as_ref()],
+        bump = authority_user.bump
+    )]
+    pub authority_user: Account<'info, UserAccount>,
+
     pub authority: Signer<'info>,
 }
 
@@ -725,8 +773,8 @@ pub struct UserAccount {
     pub role: UserRole,
     #[max_len(50)]
     pub username: String,
-    #[max_len(100)]
-    pub email: String,
+    // NOTE: No email, no precise address/location. Privacy: on-chain data is public
+    // and cannot contain personal data. See SCHEMA_ON_CHAIN_DATA.md.
     pub location: Location,
     pub reputation_score: u16,
     pub total_donations: u32,
@@ -743,6 +791,7 @@ pub struct UserAccount {
 #[derive(InitSpace)]
 pub struct Donation {
     pub donor: Pubkey,
+    pub nonce: u64,
     pub donation_data: DonationData,
     pub status: DonationStatus,
     pub risk_score: RiskScore,
@@ -798,24 +847,27 @@ pub struct GlobalConfigAccount {
     pub bump: u8,
 }
 
+/// Location stored on-chain. Deliberately COARSE AND PUBLIC:
+/// no precise addresses, no postal codes, no private coordinates.
+/// Private geolocation can be shared as `position_hash` (opaque digest), never as coordinates.
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
 pub struct Location {
-    pub latitude: f64,
-    pub longitude: f64,
-    #[max_len(200)]
-    pub address: String,
-    #[max_len(100)]
+    #[max_len(50)]
     pub city: String,
-    #[max_len(50)]
-    pub state: String,
-    #[max_len(20)]
-    pub postal_code: String,
-    #[max_len(50)]
+    // ISO-3166-1 alpha-2 country code (e.g. "MX").
+    #[max_len(10)]
     pub country: String,
+    #[max_len(30)]
+    pub region: String,
+    // Optional opaque digest of the true geolocation (max 64 bytes).
+    #[max_len(64)]
+    pub position_hash: Option<String>,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
 pub struct DonationData {
+    /// Nonce for the donation PDA seed. Must be unique per donor (client-generated).
+    pub nonce: u64,
     #[max_len(100)]
     pub name: String,
     #[max_len(50)]
@@ -832,7 +884,7 @@ pub struct DonationData {
     pub is_urgent: bool,
     pub is_perishable: bool,
     pub requires_refrigeration: bool,
-    #[max_len(1000)]
+    #[max_len(20, 256)]
     pub images: Vec<String>,
 }
 
@@ -1063,6 +1115,15 @@ pub enum CustomError {
     
     #[msg("Metadata creation failed")]
     MetadataCreationFailed,
+
+    #[msg("Invalid name")]
+    InvalidName,
+
+    #[msg("Invalid nonce")]
+    InvalidNonce,
+
+    #[msg("Donation is not pending")]
+    DonationNotPending,
 }
 
 // ==================== UTILITIES ====================

@@ -56,7 +56,7 @@ if command -v anchor &> /dev/null; then
 else
     echo "⚠️  Anchor CLI not available. Manual deployment required."
     echo "📦 Program built at: target/deploy/feed_the_future.so"
-    echo "🔑 Program ID: F1T3F11111111111111111111111111111111111111"
+    echo "🔑 Program ID: B4Cx6Vkm2VKiTGd8hpgCPbCDR2FBxULvGNAwEmVc8j4p"
     echo ""
     echo "To deploy manually:"
     echo "1. Create a new keypair: solana-keygen new --outfile ~/.config/solana/feed_the_future.json"

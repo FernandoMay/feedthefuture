@@ -11,7 +11,7 @@ class SolanaConstants {
   // Devnet Configuration
   static const String rpcUrl = 'https://api.devnet.solana.com';
   static const String wsUrl = 'wss://api.devnet.solana.com';
-  static const String programId = 'F1T3F11111111111111111111111111111111111111'; // Update after deploy
+  static const String programId = 'B4Cx6Vkm2VKiTGd8hpgCPbCDR2FBxULvGNAwEmVc8j4p'; // Matches declare_id! in lib.rs
   
   // Environment
   static const String environment = 'devnet';

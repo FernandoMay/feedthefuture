@@ -126,7 +126,7 @@ cd ../..
 
 # Deploy to devnet
 print_step "Deploying to Devnet..."
-PROGRAM_ID="F1T3F11111111111111111111111111111111111111"
+PROGRAM_ID="B4Cx6Vkm2VKiTGd8hpgCPbCDR2FBxULvGNAwEmVc8j4p"
 
 if command -v anchor &> /dev/null; then
     if anchor deploy --provider.cluster devnet; then

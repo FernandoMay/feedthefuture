@@ -43,3 +43,14 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Feed the Future — local build artifacts & secrets
+solana-contract/target/
+solana-contract/out/
+node_modules/
+# Scratch debug probes (superseded by the passing test suite)
+solana-contract/debug*.js
+**/secrets/
+*.key
+*.pem
+*.json.bak

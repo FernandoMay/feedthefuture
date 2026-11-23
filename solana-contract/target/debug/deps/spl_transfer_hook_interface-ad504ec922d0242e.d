@@ -1,9 +1,0 @@
-/Users/fmf/Downloads/files (3)/solana-contract/target/debug/deps/spl_transfer_hook_interface-ad504ec922d0242e.d: /Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/lib.rs /Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/error.rs /Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/instruction.rs /Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/offchain.rs /Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/onchain.rs
-
-/Users/fmf/Downloads/files (3)/solana-contract/target/debug/deps/libspl_transfer_hook_interface-ad504ec922d0242e.rmeta: /Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/lib.rs /Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/error.rs /Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/instruction.rs /Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/offchain.rs /Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/onchain.rs
-
-/Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/lib.rs:
-/Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/error.rs:
-/Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/instruction.rs:
-/Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/offchain.rs:
-/Users/fmf/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spl-transfer-hook-interface-0.9.0/src/onchain.rs:
