@@ -8,7 +8,7 @@
 | Cluster | `devnet` |
 | Keypair | `~/.config/solana/ftf_program.json` (copia: `target/deploy/feed_the_future-keypair.json`) |
 | Fee-payer (Anchor) | `HHK352gcEYtYD23siG1D6jQfmk8oRuSw93nPW2F5MUGZ` (`~/.config/solana/id.json`) |
-| Estado | ⏳ Pendiente de fondos — ver [`DEPLOYMENT.md`](DEPLOYMENT.md) |
+| Estado | ✅ **Desplegado en Devnet** (2026-11-24, slot 525924025) — ver [`DEPLOYMENT.md`](DEPLOYMENT.md) |
 
 La dirección en Devnet **es la que está dentro del `declare_id!`** en
 `programs/feed-the-future/src/lib.rs`. El mismo ID está sincronizado en
